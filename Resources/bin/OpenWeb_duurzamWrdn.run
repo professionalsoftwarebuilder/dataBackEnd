@@ -1,0 +1,8 @@
+#!/bin/bash
+# Script to change file permissions for website
+
+chown duurzaam:duurzaam /var/www/html/dzwoeren/duurzmWrdn/db.sqlite3
+chmod 777 /var/www/html/dzwoeren/duurzmWrdn/db.sqlite3
+chown -R duurzaam:duurzaam /var/www/html/dzwoeren/duurzmWrdn/
+chmod 777 /var/www/html/dzwoeren/duurzmWrdn/
+#chown -R duurzaam:duurzaam /var/www/html/dzwoeren/duurzmWrdn/venv

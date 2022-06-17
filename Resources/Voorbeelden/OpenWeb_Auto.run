@@ -1,0 +1,7 @@
+#!/bin/bash
+# Script to change file permissions for website
+
+chown koekwo:koekwo /home/koekwo/WebSites/Prj_Dja_Dev_Auto/cardisplay/db.sqlite3
+chmod 777 /home/koekwo/WebSites/Prj_Dja_Dev_Auto/cardisplay/db.sqlite3
+chown -R koekwo:koekwo /home/koekwo/WebSites/Prj_Dja_Dev_Auto/cardisplay
+chmod 777 /home/koekwo/WebSites/Prj_Dja_Dev_Auto/cardisplay

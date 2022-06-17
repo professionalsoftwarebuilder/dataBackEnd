@@ -1,0 +1,13 @@
+#!/bin/bash
+# Script to change file permissions for website
+
+chown -R apache:apache /var/www/html/dzwoeren/duurzmWrdn
+chmod -R u+w /var/www/html/dzwoeren/duurzmWrdn
+chown apache:apache /var/www/html/dzwoeren/duurzmWrdn/db.sqlite3
+#chmod u+w /var/www/html/dzwoeren/duurzmWrdn/db.sqlite3
+chmod 665 /var/www/html/dzwoeren/duurzmWrdn/db.sqlite3
+
+#chown -R apache:apache /var/www/html/dzwoeren/duurzmWrdn/media_root
+#chmod 775 /var/www/html/dzwoeren/duurzmWrdn/media_root
+chown -R apache:apache /var/www/html/dzwoeren/venv
+

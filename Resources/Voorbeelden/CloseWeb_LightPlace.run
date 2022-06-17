@@ -1,0 +1,8 @@
+#!/bin/bash
+# Script to change file permissions for website
+
+chown www-data:www-data /home/koekwo/WebSites/Dja_LightPlace/lightplace/db.sqlite3
+chmod 665 /home/koekwo/WebSites/Dja_LightPlace/lightplace/db.sqlite3
+chown -R www-data:www-data /home/koekwo/WebSites/Dja_LightPlace
+chown -R www-data:www-data /home/koekwo/WebSites/Dja_LightPlace/lightplace/media_root
+chmod 775 /home/koekwo/WebSites/Dja_LightPlace/lightplace/media_root

@@ -1,0 +1,8 @@
+#!/bin/bash
+# Script to change file permissions for website
+
+chown koekwo:koekwo /home/koekwo/WebSites/Dja_LightPlace/lightplace/db.sqlite3
+chmod 777 /home/koekwo/WebSites/Dja_LightPlace/lightplace/db.sqlite3
+chown -R koekwo:koekwo /home/koekwo/WebSites/Dja_LightPlace/lightplace
+chmod 777 /home/koekwo/WebSites/Dja_LightPlace/lightplace
+chown -R koekwo:koekwo /home/koekwo/WebSites/Dja_LightPlace/venv
