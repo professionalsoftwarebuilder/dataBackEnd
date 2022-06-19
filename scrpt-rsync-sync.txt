@@ -10,7 +10,7 @@ RSYNC="/usr/bin/sudo /usr/bin/rsync"
 SOURCE="/run/media/corbij/Maxtor/KlaarZet_O/Projects/Python/Django/Prj_Dja_DuurzaamWoerden/duurzmWrdn/"
 #DESTINATION="duurzaam@185.95.14.162:/home/duurzaam/websites/dzwoeren/duurzmWrdn"
 #DESTINATION="root@185.95.14.162:/home/duurzaam/websites/dzwoeren/duurzmWrdn"
-DESTINATION="root@185.95.14.162:/var/www/html/dzwoeren/duurzmWrdn/"
+DESTINATION="root@databank.duurzaamwoerden.nl:/var/www/html/dzwoeren/duurzmWrdn/"
 
 # File waarin zich de excludes bevinden
 EXCLUDESFILE="rsync-excludes-forsync"

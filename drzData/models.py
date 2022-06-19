@@ -85,7 +85,7 @@ class Groep(models.Model):
     grp_GroupNm = models.CharField('Groep', max_length=45)
     grp_Website = models.CharField('Website', help_text='Plak hier de url van website van groep', max_length=240, blank=True, null=True)
     grp_Notities = models.TextField('Notities', blank=True, null=True)
-    grp_Type = models.CharField(max_length=1, choices=GROEP_CHS, blank=True, null=True, default='O')
+    grp_Type = models.CharField('Type groep', max_length=1, choices=GROEP_CHS, blank=True, null=True, default='O')
 
     def __str__(self):
         return CheckForNone(self.grp_GroupNm)
@@ -120,7 +120,7 @@ class Adres(models.Model):
     #adr_Land = CountryField(multiple=False)
     adr_PostCd = models.CharField('Postcode', max_length=15, blank=True, null=True)
     adr_Plaats = models.CharField('Plaats', max_length=85, blank=True, null=True)
-    adr_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES, blank=True, null=True, default='W')
+    adr_type = models.CharField('Type adres', max_length=1, choices=ADDRESS_CHOICES, blank=True, null=True, default='W')
     adr_Notities = models.TextField('Notities', blank=True, null=True)
 
     def __str__(self):
@@ -138,7 +138,7 @@ class AdresGroep(models.Model):
     #adg_Land = CountryField(multiple=False)
     adg_PostCd = models.CharField('Postcode', max_length=15, blank=True, null=True)
     adg_Plaats = models.CharField('Plaats', max_length=85, blank=True, null=True)
-    adg_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES, blank=True, null=True, default='W')
+    adg_type = models.CharField('Type adres', max_length=1, choices=ADDRESS_CHOICES, blank=True, null=True, default='W')
     adg_Notities = models.TextField('Notities', blank=True, null=True)
 
     def __str__(self):
@@ -152,7 +152,7 @@ class Nummer(models.Model):
     Contact = models.ForeignKey(Contact, on_delete=models.CASCADE, blank=True, null=True)
     nmb_Number = models.CharField('Nummer', max_length=85, help_text='Mobiel, Telefoon, E-mail, Facebook, enz.')
     nmb_Medium = models.CharField('Medium', max_length=1, choices=MEDIUM_CHS, blank=True, null=True)
-    nmb_Notities = models.CharField('Notitie', max_length=120, help_text='Kanttekening bij dit medium', blank=True, null=True)
+    nmb_Notities = models.CharField('Notitie', max_length=120, blank=True, null=True)
 
     def __str__(self):
         return self.nmb_Number
