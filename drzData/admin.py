@@ -5,39 +5,39 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 from .forms import ContactForm, AdresForm, NummerForm, AdresGrForm, NummerGrForm
-from .models import Groep, Contact, Adres, Nummer, NummerGroep, AdresGroep, Woninggegevens, Vraag, Activiteit, Leverancier
+from .models import Groep, Contact, Adres, Nummer, NummerGroep, AdresGroep, Woninggegevens, Vraag, Activiteit, Leverancier, Actie
 
 
 class NummerInline(admin.StackedInline):
     model = Nummer
     exclude = ('Leverancier', )
     form = NummerForm
-    extra = 1
+    extra = 0
 
 
 class NummerInlineLev(admin.StackedInline):
     model = Nummer
     exclude = ('Contact', )
     form = NummerForm
-    extra = 1
+    extra = 0
 
 
 class AdresInline(admin.StackedInline):
     model = Adres
     form = AdresForm
-    extra = 1
+    extra = 0
 
 
 class NummerGroepInline(admin.StackedInline):
     model = NummerGroep
     form = NummerGrForm
-    extra = 1
+    extra = 0
 
 
 class AdresGroepInline(admin.StackedInline):
     model = AdresGroep
     form = AdresGrForm
-    extra = 1
+    extra = 0
 
 
 class TypeWoningInline(admin.StackedInline):
@@ -97,3 +97,4 @@ admin.site.register(Vraag)
 admin.site.register(Woninggegevens)
 admin.site.register(Leverancier, LeverancierAdmin)
 admin.site.register(Activiteit)
+admin.site.register(Actie)

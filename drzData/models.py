@@ -9,6 +9,12 @@ ADDRESS_CHOICES = (
     ('V', 'Verblijfadres'),
 )
 
+ACTIESTATUS_CHS = (
+    ('O', 'Open'),
+    ('U', 'In Uitvoering'),
+    ('V', 'Volbracht'),
+)
+
 
 CNTHOEDANIGHEID_CHS = (
     ('W', 'Winkelklant'),
@@ -110,6 +116,15 @@ class Groep(models.Model):
         verbose_name = 'Groep'
 
 
+class Actie(models.Model):
+    aci_Naam = models.CharField('Naam', max_length=85)
+    aci_Omschr = models.TextField('Omschrijving', blank=True, null=True)
+    aci_Status = models.CharField('Status', max_length=1, choices=ACTIESTATUS_CHS, blank=True, null=True, default='O')
+
+    def __str__(self):
+        return self.aci_Naam
+
+
 class Activiteit(models.Model):
     act_Naam = models.CharField('Naam / Titel', max_length=85, help_text='Naam van de activiteit, project of themadag')
     act_Omschr = models.TextField('Omschrijving', blank=True, null=True)
@@ -126,6 +141,7 @@ class Contact(models.Model):
     cnt_Vastlegger = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_query_name='Genoteerd door', verbose_name='Vastlegger')
     cnt_DatVastlegging = models.DateTimeField('Tijdstip van notatie', blank=True, null=True)
     cnt_Groepen = models.ManyToManyField(Groep, blank=True, verbose_name='Groep(en)', help_text='Groepen waaronder dit contact valt; ')
+    cnt_Acties = models.ManyToManyField(Actie, blank=True, verbose_name='Acties', help_text='Acties (open) mbt dit contact; ')
     cnt_Activiteit = models.ManyToManyField(Activiteit, blank=True, verbose_name='Activiteiten', help_text='Activiteiten waaraan dit contact deelneemt; ')
     cnt_VoorNm = models.CharField('Voornaam', max_length=45)
     cnt_AchterNm = models.CharField('Achternaam', max_length=65)
@@ -207,6 +223,10 @@ class Woninggegevens(models.Model):
     class Meta:
         verbose_name_plural = 'Woninggegevens'
 
+    def __str__(self):
+        return str(self.Contact) + ' / ' + self.get_wng_TypeWoning_display()
+
+
 
 
 class Vraag(models.Model):
@@ -221,7 +241,7 @@ class Vraag(models.Model):
         verbose_name_plural = 'Vragen'
 
     def __str__(self):
-        return self.nmg_Number
+        return self.get_vrg_OnderwerpVraag_display() + ' / ' + self.vrg_Tekst[:14] + '...'
 
 
 class Leverancier(models.Model):
@@ -245,4 +265,5 @@ class Nummer(models.Model):
 
     def __str__(self):
         return self.nmb_Number
+
 
