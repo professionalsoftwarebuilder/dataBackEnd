@@ -9,6 +9,12 @@ ADDRESS_CHOICES = (
     ('V', 'Verblijfadres'),
 )
 
+
+CNTHOEDANIGHEID_CHS = (
+    ('W', 'Winkelklant'),
+    ('H', 'Huisbezoek'),
+)
+
 MEDIUM_CHS = (
     ('M', 'Mobiel nummer'),
     ('H', 'Huistelefoon'),
@@ -55,6 +61,15 @@ TYPEVRAAG_CHS = (
     ('O', 'Offerte'),
 )
 
+
+TYPEACTIVITEIT_CHS = (
+    ('L', 'Lezing'),
+    ('E', 'Excursie'),
+    ('T', 'Thema-avond'),
+    ('E', 'Project'),
+    ('E', 'Excursie'),
+)
+
 ONDERWERPVRAAG_CHS = (
     ('Ea', 'Energie algemeen'),
     ('Eiv', 'Energie isolatie vloer'),
@@ -95,21 +110,46 @@ class Groep(models.Model):
         verbose_name = 'Groep'
 
 
+class Activiteit(models.Model):
+    act_Naam = models.CharField('Naam / Titel', max_length=85, help_text='Naam van de activiteit, project of themadag')
+    act_Omschr = models.TextField('Omschrijving', blank=True, null=True)
+    act_Type = models.CharField('Type activiteit', max_length=1, choices=TYPEACTIVITEIT_CHS, blank=True, null=True, default='L')
+
+    class Meta:
+        verbose_name_plural = 'Activiteiten'
+        verbose_name = 'Activiteit, Project, Lezing, enz.'
+
+    def __str__(self):
+        return self.act_Naam
+
 class Contact(models.Model):
     cnt_Vastlegger = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_query_name='Genoteerd door', verbose_name='Vastlegger')
     cnt_DatVastlegging = models.DateTimeField('Tijdstip van notatie', blank=True, null=True)
     cnt_Groepen = models.ManyToManyField(Groep, blank=True, verbose_name='Groep(en)', help_text='Groepen waaronder dit contact valt; ')
+    cnt_Activiteit = models.ManyToManyField(Activiteit, blank=True, verbose_name='Activiteiten', help_text='Activiteiten waaraan dit contact deelneemt; ')
     cnt_VoorNm = models.CharField('Voornaam', max_length=45)
     cnt_AchterNm = models.CharField('Achternaam', max_length=65)
     cnt_TussenVgsl = models.CharField('Tussenvoegsel', max_length=15, blank=True, null=True)
     cnt_VoorLtrs = models.CharField('Voorletters', max_length=10, blank=True, null=True)
     cnt_Notities = models.TextField('Notities', blank=True, null=True)
+    cnt_Type = models.CharField('Type contact', max_length=1, choices=CNTHOEDANIGHEID_CHS, blank=True, null=True, default='W')
+    cnt_NieuwsBrief = models.BooleanField('Nieuwbrief', blank=True, null=True, default=False, help_text='Dit aanvinken als het contact de nieuwsbrief wil ontvangen')
+
+    def CheckOnbeAntw(self):
+        for vraag in self.vraag_set.all():
+            if vraag.vrg_StatusVraag == 'O':
+                return 'Vraag open'
+        return '- - -'
+
 
     def __str__(self):
         return CheckForNone(self.cnt_VoorNm) + CheckForNone(self.cnt_TussenVgsl) + CheckForNone(self.cnt_AchterNm)
 
     class Meta:
         verbose_name_plural = 'Contacten'
+        ordering = ("cnt_AchterNm", "cnt_VoorNm")
+
+    CheckOnbeAntw.short_description = 'Acties'
 
 
 class Adres(models.Model):
@@ -148,16 +188,6 @@ class AdresGroep(models.Model):
         verbose_name_plural = 'Adressen Groepen'
 
 
-class Nummer(models.Model):
-    Contact = models.ForeignKey(Contact, on_delete=models.CASCADE, blank=True, null=True)
-    nmb_Number = models.CharField('Nummer', max_length=85, help_text='Mobiel, Telefoon, E-mail, Facebook, enz.')
-    nmb_Medium = models.CharField('Medium', max_length=1, choices=MEDIUM_CHS, blank=True, null=True)
-    nmb_Notities = models.CharField('Notitie', max_length=120, blank=True, null=True)
-
-    def __str__(self):
-        return self.nmb_Number
-
-
 class NummerGroep(models.Model):
     Groep = models.ForeignKey(Groep, on_delete=models.CASCADE, blank=True, null=True)
     nmg_Number = models.CharField('Nummer', max_length=85, help_text='Mobiel, Telefoon, E-mail, Facebook, enz.')
@@ -189,3 +219,30 @@ class Vraag(models.Model):
 
     class Meta:
         verbose_name_plural = 'Vragen'
+
+    def __str__(self):
+        return self.nmg_Number
+
+
+class Leverancier(models.Model):
+    lvr_Naam = models.CharField('Naam', max_length=45, help_text='Naam Leverancier')
+    lvr_Notities = models.TextField('Notities', blank=True, null=True)
+
+    def __str__(self):
+        return self.lvr_Naam
+
+    class Meta:
+        verbose_name_plural = 'Leveranciers'
+        ordering = ("lvr_Naam",)
+
+
+class Nummer(models.Model):
+    Contact = models.ForeignKey(Contact, on_delete=models.CASCADE, blank=True, null=True)
+    Leverancier = models.ForeignKey(Leverancier, on_delete=models.CASCADE, blank=True, null=True)
+    nmb_Number = models.CharField('Nummer', max_length=85, help_text='Mobiel, Telefoon, E-mail, Facebook, enz.')
+    nmb_Medium = models.CharField('Medium', max_length=1, choices=MEDIUM_CHS, blank=True, null=True)
+    nmb_Notities = models.CharField('Notitie', max_length=120, blank=True, null=True)
+
+    def __str__(self):
+        return self.nmb_Number
+
