@@ -6,7 +6,7 @@ LICENSE
 error.log
 *.kdev4
 access.log
-static_root
+static/
 __pycache__
 #migrations
 #__init__.py

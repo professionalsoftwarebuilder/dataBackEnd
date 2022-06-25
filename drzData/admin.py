@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 from .forms import ContactForm, AdresForm, NummerForm, AdresGrForm, NummerGrForm
-from .models import Groep, Contact, Adres, Nummer, NummerGroep, AdresGroep, Woninggegevens, Vraag, Activiteit, Leverancier, Actie
+from .models import Groep, Contact, Adres, Nummer, NummerGroep, AdresGroep, Woninggegevens, Vraag, Activiteit, Leverancier, Actie, WinkelBezoek, Bezoekreden
 
 
 class NummerInline(admin.StackedInline):
@@ -61,7 +61,17 @@ class GroepAdmin(admin.ModelAdmin):
 class ContactAdmin(admin.ModelAdmin):
     inlines = (AdresInline, NummerInline, TypeWoningInline, VraagInline)
     form = ContactForm
-    list_display = ('cnt_VoorNm', 'cnt_AchterNm', 'CheckOnbeAntw', 'view_vragen_link', 'view_woongeg_link')
+    list_display = ('cnt_VoorNm', 'cnt_AchterNm', 'CheckOnbeAntw', 'view_acties_link', 'view_vragen_link', 'view_woongeg_link')
+
+
+    def view_acties_link(self, obj):
+        count = obj.cnt_Acties.count()
+        url = (
+                reverse("admin:drzData_actie_changelist")
+                + "?"
+                + urlencode({"acties__id": f"{obj.id}"})
+        )
+        return format_html('<a href="{}">{} Acties</a>', url, count)
 
 
     def view_vragen_link(self, obj):
@@ -69,13 +79,13 @@ class ContactAdmin(admin.ModelAdmin):
         url = (
             reverse("admin:drzData_vraag_changelist")
             + "?"
-            + urlencode({"vragen__id": f"{obj.id}"})
+            + urlencode({"contact__id": f"{obj.id}"})
         )
         return format_html('<a href="{}">{} Vragen</a>', url, count)
 
 
     def view_woongeg_link(self, obj):
-        count = obj.vraag_set.count()
+        count = obj.woninggegevens_set.count()
         url = (
             reverse("admin:drzData_woninggegevens_changelist")
             + "?"
@@ -89,6 +99,7 @@ class ContactAdmin(admin.ModelAdmin):
 
     view_vragen_link.short_description = "Vragen"
     view_woongeg_link.short_description = 'Woninggeg.'
+    view_acties_link.short_description = 'Acties'
 
 
 admin.site.register(Groep, GroepAdmin)
@@ -98,3 +109,5 @@ admin.site.register(Woninggegevens)
 admin.site.register(Leverancier, LeverancierAdmin)
 admin.site.register(Activiteit)
 admin.site.register(Actie)
+admin.site.register(Bezoekreden)
+admin.site.register(WinkelBezoek)
