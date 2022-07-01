@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django_countries.fields import CountryField
 
+
 ADDRESS_CHOICES = (
     ('W', 'Woonadres'),
     ('B', 'Bezoekadres'),
@@ -95,6 +96,14 @@ STATUSVRAAG_CHS = (
     ('U', 'Wordt uitgezocht'),
 )
 
+BEOORDELING_CHS = (
+    ('Z', 'Zeer Goed'),
+    ('G', 'Goed'),
+    ('V', 'Voldoende'),
+    ('S', 'Slecht'),
+    ('E', 'Zeer Slecht'),
+)
+
 def CheckForNone(theStr):
     if theStr is None:
         return ''
@@ -172,24 +181,6 @@ class Contact(models.Model):
     CheckOnbeAntw.short_description = 'Vragen'
 
 
-class Adres(models.Model):
-    Contact = models.ForeignKey(Contact, on_delete=models.CASCADE, blank=True, null=True)
-    adr_Straat = models.CharField('Straat', max_length=100, blank=True, null=True)
-    adr_HuisNr = models.CharField('Huisnummer', max_length=10, blank=True, null=True)
-    adr_HuisNrToev = models.CharField('Toevoeging', max_length=10, blank=True, null=True)
-    #adr_Land = CountryField(multiple=False)
-    adr_PostCd = models.CharField('Postcode', max_length=15, blank=True, null=True)
-    adr_Plaats = models.CharField('Plaats', max_length=85, blank=True, null=True)
-    adr_type = models.CharField('Type adres', max_length=1, choices=ADDRESS_CHOICES, blank=True, null=True, default='W')
-    adr_Notities = models.TextField('Notities', blank=True, null=True)
-
-    def __str__(self):
-        return CheckForNone(self.adr_Straat) + CheckForNone(self.adr_HuisNr) + CheckForNone(self.adr_Plaats)
-
-    class Meta:
-        verbose_name_plural = 'Adressen'
-
-
 class AdresGroep(models.Model):
     Groep = models.ForeignKey(Groep, on_delete=models.CASCADE, blank=True, null=True)
     adg_Straat = models.CharField('Straat', max_length=100, blank=True, null=True)
@@ -259,9 +250,42 @@ class Leverancier(models.Model):
         ordering = ("lvr_Naam",)
 
 
+class Exposant(models.Model):
+    exp_Naam = models.CharField('Naam', max_length=45, help_text='Naam Exposant')
+    exp_Notities = models.TextField('Notities', blank=True, null=True)
+
+    def __str__(self):
+        return self.exp_Naam
+
+    class Meta:
+        verbose_name_plural = 'Exposanten'
+        ordering = ("exp_Naam",)
+
+
+class Adres(models.Model):
+    Contact = models.ForeignKey(Contact, on_delete=models.CASCADE, blank=True, null=True)
+    Leverancier = models.ForeignKey(Leverancier, on_delete=models.CASCADE, blank=True, null=True)
+    Exposant = models.ForeignKey(Exposant, on_delete=models.CASCADE, blank=True, null=True)
+    adr_Straat = models.CharField('Straat', max_length=100, blank=True, null=True)
+    adr_HuisNr = models.CharField('Huisnummer', max_length=10, blank=True, null=True)
+    adr_HuisNrToev = models.CharField('Toevoeging', max_length=10, blank=True, null=True)
+    #adr_Land = CountryField(multiple=False)
+    adr_PostCd = models.CharField('Postcode', max_length=15, blank=True, null=True)
+    adr_Plaats = models.CharField('Plaats', max_length=85, blank=True, null=True)
+    adr_type = models.CharField('Type adres', max_length=1, choices=ADDRESS_CHOICES, blank=True, null=True, default='W')
+    adr_Notities = models.TextField('Notities', blank=True, null=True)
+
+    def __str__(self):
+        return CheckForNone(self.adr_Straat) + CheckForNone(self.adr_HuisNr) + CheckForNone(self.adr_Plaats)
+
+    class Meta:
+        verbose_name_plural = 'Adressen'
+
+
 class Nummer(models.Model):
     Contact = models.ForeignKey(Contact, on_delete=models.CASCADE, blank=True, null=True)
     Leverancier = models.ForeignKey(Leverancier, on_delete=models.CASCADE, blank=True, null=True)
+    Exposant = models.ForeignKey(Exposant, on_delete=models.CASCADE, blank=True, null=True)
     nmb_Number = models.CharField('Nummer', max_length=85, help_text='Mobiel, Telefoon, E-mail, Facebook, enz.')
     nmb_Medium = models.CharField('Medium', max_length=1, choices=MEDIUM_CHS, blank=True, null=True)
     nmb_Notities = models.CharField('Notitie', max_length=120, blank=True, null=True)
@@ -284,6 +308,7 @@ class Bezoekreden(models.Model):
 class WinkelBezoek(models.Model):
     wbz_TijdStip = models.DateTimeField('Tijdstip van bezoek', blank=True, null=True)  #, auto_now_add=True
     wbz_Bezoeken = models.ManyToManyField(Bezoekreden, blank=True, verbose_name='Bezoekreden(en)')
+    wbz_Notities = models.TextField('Notities', blank=True, null=True)
 
     class Meta:
         verbose_name_plural = 'Winkelbezoeken'
@@ -291,3 +316,13 @@ class WinkelBezoek(models.Model):
 
     def __str__(self):
         return self.wbz_TijdStip.strftime("%Y-%m-%d %H:%M:%S")  #+ ' / ' + self.wbz_Bezoeken
+
+
+class Product(models.Model):
+    prd_Naam = models.CharField('Product', max_length=85)
+
+
+class Review(models.Model):
+    Product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
+    rvw_Tekst = models.TextField('Reviewtekst')
+    rvw_Beoordeling = models.CharField('Medium', max_length=1, choices=BEOORDELING_CHS, blank=True, null=True)

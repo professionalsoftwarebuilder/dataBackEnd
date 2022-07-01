@@ -5,19 +5,26 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 from .forms import ContactForm, AdresForm, NummerForm, AdresGrForm, NummerGrForm
-from .models import Groep, Contact, Adres, Nummer, NummerGroep, AdresGroep, Woninggegevens, Vraag, Activiteit, Leverancier, Actie, WinkelBezoek, Bezoekreden
+from .models import Groep, Contact, Adres, Nummer, NummerGroep, AdresGroep, Woninggegevens, Vraag, Activiteit, Leverancier, Actie, WinkelBezoek, Bezoekreden, Exposant
 
 
 class NummerInline(admin.StackedInline):
     model = Nummer
-    exclude = ('Leverancier', )
+    exclude = ('Leverancier', 'Exposant',)
     form = NummerForm
     extra = 0
 
 
 class NummerInlineLev(admin.StackedInline):
     model = Nummer
-    exclude = ('Contact', )
+    exclude = ('Contact', 'Exposant',)
+    form = NummerForm
+    extra = 0
+
+
+class NummerInlineExp(admin.StackedInline):
+    model = Nummer
+    exclude = ('Contact', 'Leverancier',)
     form = NummerForm
     extra = 0
 
@@ -25,6 +32,21 @@ class NummerInlineLev(admin.StackedInline):
 class AdresInline(admin.StackedInline):
     model = Adres
     form = AdresForm
+    exclude = ('Exposant', 'Leverancier',)
+    extra = 0
+
+
+class AdresInlineExp(admin.StackedInline):
+    model = Adres
+    form = AdresForm
+    exclude = ('Contact', 'Leverancier',)
+    extra = 0
+
+
+class AdresInlineLev(admin.StackedInline):
+    model = Adres
+    form = AdresForm
+    exclude = ('Exposant', 'Contact',)
     extra = 0
 
 
@@ -51,7 +73,11 @@ class VraagInline(admin.StackedInline):
 
 
 class LeverancierAdmin(admin.ModelAdmin):
-    inlines = (NummerInlineLev,)
+    inlines = (NummerInlineLev, AdresInlineLev)
+
+
+class ExposantAdmin(admin.ModelAdmin):
+    inlines = (NummerInlineExp, AdresInlineExp)
 
 
 class GroepAdmin(admin.ModelAdmin):
@@ -106,7 +132,7 @@ admin.site.register(Groep, GroepAdmin)
 admin.site.register(Contact, ContactAdmin)
 admin.site.register(Vraag)
 admin.site.register(Woninggegevens)
-admin.site.register(Leverancier, LeverancierAdmin)
+admin.site.register(Exposant, ExposantAdmin)
 admin.site.register(Activiteit)
 admin.site.register(Actie)
 admin.site.register(Bezoekreden)

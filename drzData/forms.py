@@ -1,4 +1,9 @@
 from django import forms
+from django.contrib.admin.widgets import AdminSplitDateTime
+from django.forms import widgets
+
+from .models import Bezoekreden, WinkelBezoek
+
 
 theWidget = forms.TextInput(attrs={'size': '10'})
 wdgSmall = forms.TextInput(attrs={'size': '6'})
@@ -32,4 +37,19 @@ class NummerForm(forms.ModelForm):
 
 class NummerGrForm(forms.ModelForm):
     nmg_Notities = forms.CharField(widget=wdgTextA, label='Notities', required=False, help_text='Kanttekening bij dit nummer (bijv: meest recent)')
+
+
+class WinkelBezoekForm(forms.ModelForm):
+    wbz_TijdStip = forms.SplitDateTimeField(widget=AdminSplitDateTime, label='Tijdstip van bezoek')
+    wbz_Bezoeken = forms.ModelMultipleChoiceField(
+        queryset=Bezoekreden.objects.all(),
+        widget=forms.CheckboxSelectMultiple(attrs={'style': 'list-style-type:none;'}),
+        label='Bezoekreden(en)'
+    )
+    wbz_Notities = forms.CharField(widget=wdgTextA, label='Notities')
+
+    class Meta:
+        model = WinkelBezoek
+        fields = ('wbz_TijdStip', 'wbz_Bezoeken', 'wbz_Notities')
+
 
