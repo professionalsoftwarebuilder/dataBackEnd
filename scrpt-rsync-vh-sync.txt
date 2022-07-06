@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+# Professional Software - www
+# Let op: dit is synchroniseren niet backuppen
+# For synchronizing virtual hosts
+# Synchronize development with server
+
+# vm is dit om het op de remote te draaien
+RSYNC="/usr/bin/sudo /usr/bin/rsync"
+       
+SOURCE="/run/media/corbij/Maxtor/KlaarZet_O/Projects/Python/Django/Prj_Dja_DuurzaamWoerden/duurzmWrdn/Resources/virthost/"
+#DESTINATION="duurzaam@185.95.14.162:/home/duurzaam/websites/dzwoeren/duurzmWrdn"
+#DESTINATION="root@185.95.14.162:/home/duurzaam/websites/dzwoeren/duurzmWrdn"
+DESTINATION="root@databank.duurzaamwoerden.nl:/etc/httpd/sites-available/"
+
+# File waarin zich de excludes bevinden
+#EXCLUDESFILE="rsync-excludes-forsync"
+#EXCLUDES="$SOURCE$EXCLUDESFILE"
+
+# SSH
+#Hier gebeurd het eig.
+# -e: specify the remote shell to use
+ rsync -uavP \
+  --delete -r \
+  --exclude-from=$EXCLUDES \
+  $SOURCE $DESTINATION
+ 
+ 
+# Origineel 
+#rsync -avx -e 'ssh -p22' \
+# --rsync-path="$RSYNC" \
+# --exclude-from=$EXCLUDES \
+# --numeric-ids \
+# --delete -r \
+# --link-dest=../$YESTERDAY $SOURCE $DESTINATION
+
+# Writes a log of successful updates
+# echo -e "\nBACKUP success-$TODAY " >> $LOG
+
+

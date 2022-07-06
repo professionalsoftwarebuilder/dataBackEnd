@@ -21,4 +21,8 @@ scrpt-rsync-sync.txt
 media_root
 Voorbeelden/
 Voorbeelden
-
+venv04
+venv04/
+venv05/
+.git/
+nohup.out
