@@ -4,61 +4,35 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 
-from .forms import ContactForm, AdresForm, NummerForm, AdresGrForm, NummerGrForm
-from .models import Groep, Contact, Adres, Nummer, NummerGroep, AdresGroep, Woninggegevens, Vraag, Activiteit, Leverancier, Actie, WinkelBezoek, Bezoekreden, Exposant
+from .forms import ContactForm, AdresForm, NummerForm, ExposantForm, AdviesContactForm, VraagForm
+from .models import Groep, Contact, Adres, Nummer, Woninggegevens, Vraag, Activiteit, Actie, WinkelBezoek, Bezoekreden, Exposant, AdviesContact
 
 
-class NummerInline(admin.StackedInline):
+class NummerCntInline(admin.StackedInline):
     model = Nummer
-    exclude = ('Leverancier', 'Exposant',)
+    exclude = ('Groep',)
     form = NummerForm
     extra = 0
 
 
-class NummerInlineLev(admin.StackedInline):
+class NummerGrpInline(admin.StackedInline):
     model = Nummer
-    exclude = ('Contact', 'Exposant',)
+    exclude = ('Contact',)
     form = NummerForm
     extra = 0
 
 
-class NummerInlineExp(admin.StackedInline):
-    model = Nummer
-    exclude = ('Contact', 'Leverancier',)
-    form = NummerForm
-    extra = 0
-
-
-class AdresInline(admin.StackedInline):
+class AdresCntInline(admin.StackedInline):
     model = Adres
     form = AdresForm
-    exclude = ('Exposant', 'Leverancier',)
+    exclude = ('Groep',)
     extra = 0
 
 
-class AdresInlineExp(admin.StackedInline):
+class AdresGrpInline(admin.StackedInline):
     model = Adres
     form = AdresForm
-    exclude = ('Contact', 'Leverancier',)
-    extra = 0
-
-
-class AdresInlineLev(admin.StackedInline):
-    model = Adres
-    form = AdresForm
-    exclude = ('Exposant', 'Contact',)
-    extra = 0
-
-
-class NummerGroepInline(admin.StackedInline):
-    model = NummerGroep
-    form = NummerGrForm
-    extra = 0
-
-
-class AdresGroepInline(admin.StackedInline):
-    model = AdresGroep
-    form = AdresGrForm
+    exclude = ('Contact',)
     extra = 0
 
 
@@ -69,26 +43,40 @@ class TypeWoningInline(admin.StackedInline):
 
 class VraagInline(admin.StackedInline):
     model = Vraag
+    form = VraagForm
     extra = 0
 
 
-class LeverancierAdmin(admin.ModelAdmin):
-    inlines = (NummerInlineLev, AdresInlineLev)
-
-
 class ExposantAdmin(admin.ModelAdmin):
-    inlines = (NummerInlineExp, AdresInlineExp)
+    inlines = (NummerGrpInline, AdresGrpInline)
+    form = ExposantForm
 
 
 class GroepAdmin(admin.ModelAdmin):
-    inlines = (AdresGroepInline, NummerGroepInline,)
+    inlines = (AdresGrpInline, NummerGrpInline,)
+    list_filter = ('exposant',)
+
+    def get_queryset(self, request):
+        qs = super(GroepAdmin, self).get_queryset(request)
+        return qs.filter(exposant__isnull=True)
 
 
 class ContactAdmin(admin.ModelAdmin):
-    inlines = (AdresInline, NummerInline, TypeWoningInline, VraagInline)
+    inlines = (NummerCntInline, AdresCntInline)
     form = ContactForm
-    list_display = ('cnt_VoorNm', 'cnt_AchterNm', 'CheckOnbeAntw', 'view_acties_link', 'view_vragen_link', 'view_woongeg_link')
+    #filter_horizontal = ('cnt_Groepen',)
+    list_display = ('cnt_VoorNm', 'cnt_AchterNm',)
 
+    def get_queryset(self, request):
+        qs = super(ContactAdmin, self).get_queryset(request)
+        return qs.filter(adviescontact__isnull=True)
+
+
+class AdviesContactAdmin(admin.ModelAdmin):
+    inlines = (NummerCntInline, AdresCntInline, TypeWoningInline, VraagInline)
+    form = AdviesContactForm
+    exclude = ('cnt_Groepen',)
+    list_display = ('cnt_VoorNm', 'cnt_AchterNm', 'CheckOnbeAntw', 'view_acties_link', 'view_vragen_link', 'view_woongeg_link')
 
     def view_acties_link(self, obj):
         count = obj.cnt_Acties.count()
@@ -99,7 +87,6 @@ class ContactAdmin(admin.ModelAdmin):
         )
         return format_html('<a href="{}">{} Acties</a>', url, count)
 
-
     def view_vragen_link(self, obj):
         count = obj.vraag_set.count()
         url = (
@@ -108,7 +95,6 @@ class ContactAdmin(admin.ModelAdmin):
             + urlencode({"contact__id": f"{obj.id}"})
         )
         return format_html('<a href="{}">{} Vragen</a>', url, count)
-
 
     def view_woongeg_link(self, obj):
         count = obj.woninggegevens_set.count()
@@ -137,3 +123,4 @@ admin.site.register(Activiteit)
 admin.site.register(Actie)
 admin.site.register(Bezoekreden)
 admin.site.register(WinkelBezoek)
+admin.site.register(AdviesContact, AdviesContactAdmin)
