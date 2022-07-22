@@ -4,8 +4,10 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 
-from .forms import ContactForm, AdresForm, NummerForm, ExposantForm, AdviesContactForm, VraagForm
-from .models import Groep, Contact, Adres, Nummer, Woninggegevens, Vraag, Activiteit, Actie, WinkelBezoek, Bezoekreden, Exposant, AdviesContact
+from .forms import ContactForm, AdresForm, NummerForm, ExposantForm, AdviesContactForm, VraagForm, CoachgesprekForm
+from .models import Groep, Contact, Adres, Nummer, Woninggegevens, Vraag, \
+    Activiteit, Actie, WinkelBezoek, Bezoekreden, Exposant, \
+    AdviesContact, CoachGesprek
 
 
 class NummerCntInline(admin.StackedInline):
@@ -72,6 +74,10 @@ class ContactAdmin(admin.ModelAdmin):
         return qs.filter(adviescontact__isnull=True)
 
 
+class CoachgesprekAdmin(admin.ModelAdmin):
+    form = CoachgesprekForm
+
+
 class AdviesContactAdmin(admin.ModelAdmin):
     inlines = (NummerCntInline, AdresCntInline, TypeWoningInline, VraagInline)
     form = AdviesContactForm
@@ -92,7 +98,7 @@ class AdviesContactAdmin(admin.ModelAdmin):
         url = (
             reverse("admin:drzData_vraag_changelist")
             + "?"
-            + urlencode({"contact__id": f"{obj.id}"})
+            + urlencode({"adviescontact__id": f"{obj.id}"})
         )
         return format_html('<a href="{}">{} Vragen</a>', url, count)
 
@@ -124,3 +130,4 @@ admin.site.register(Actie)
 admin.site.register(Bezoekreden)
 admin.site.register(WinkelBezoek)
 admin.site.register(AdviesContact, AdviesContactAdmin)
+admin.site.register(CoachGesprek, CoachgesprekAdmin)

@@ -8,6 +8,8 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('contact/', views.contact, name='contact'),
     path('add_winkelbezoek/', views.add_winkelbezoek.as_view(), name='add_winkelbezoek'),
+    path('add_coachgesprek/', views.add_coachgesprek.as_view(), name='add_coachgesprek'),
+    path('add_adviescontact/', views.add_adviescontact.as_view(), name='add_adviescontact'),
 ]
 
 admin.site.site_header = 'Duurzaam Woerden Gegevensbeheer'                    # default: "Django Administration"

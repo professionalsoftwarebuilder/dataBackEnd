@@ -1,0 +1,682 @@
+{% extends 'baseadmin.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<style>
+  ul
+  {
+      list-style: none;
+  }
+
+   /* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+</style>
+
+<!-- Tab links -->
+<div class="tab">
+  <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'London')">Initiatie</button>
+  <button class="tablinks" onclick="openCity(event, 'Paris')">Telefonische voorbereiding</button>
+  <button class="tablinks" onclick="openCity(event, 'Tokyo')">Afspraakbevestiging</button>
+  <button class="tablinks" onclick="openCity(event, 'Amsterdam')">Woningcorporatie</button>
+  <button class="tablinks" onclick="openCity(event, 'Woerden')">Wensen</button>
+  <button class="tablinks" onclick="openCity(event, 'Oss')">Woonkamer</button>
+  <button class="tablinks" onclick="openCity(event, 'Heesh')">Keuken</button>
+  <button class="tablinks" onclick="openCity(event, 'Berghem')">Gang</button>
+  <button class="tablinks" onclick="openCity(event, 'Lith')">CV</button>
+  <button class="tablinks" onclick="openCity(event, 'Oyen')">Slaapkamer</button>
+  <button class="tablinks" onclick="openCity(event, 'Geffen')">Tuin</button>
+  <button class="tablinks" onclick="openCity(event, 'Schaik')">Schuur</button>
+  <button class="tablinks" onclick="openCity(event, 'Nuland')">Bespaaradvies</button>
+</div>
+
+<form action="" method="post">
+    {% csrf_token %}
+
+
+<!-- Tab content -->
+<div id="London" class="tabcontent">
+  <h2>{% if object %}Wijzig{% else %}Nieuwe{% endif %} Coachgesprek</h2>
+
+ {% if form.non_field_errors %}
+    <ul>
+      {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% for hidden_field in form.hidden_fields %}
+    {% if hidden_field.errors %}
+      <ul>
+        {% for error in hidden_field.errors %}
+          <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {{ hidden_field }}
+  {% endfor %}
+
+  <table >
+    {% for field in form.visible_fields|slice:":4" %}
+      <tr>
+        <th>{{ field.label_tag }}</th>
+        <td>
+          {% if field.errors %}
+            <ul>
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          {{ field }}
+          {% if field.help_text %}
+            <br />{{ field.help_text }}
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+
+<!--    {{ form.as_table }}-->
+
+<!--      {% for field in form|slice:":3" %}-->
+<!--        {% endfor %}-->
+
+    <button>Opslaan</button>
+</div>
+
+
+<div id="Paris" class="tabcontent">
+      <h2>Telefonische voorbereiding met de bewoner</h2>
+
+ {% if form.non_field_errors %}
+    <ul>
+      {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% for hidden_field in form.hidden_fields %}
+    {% if hidden_field.errors %}
+      <ul>
+        {% for error in hidden_field.errors %}
+          <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {{ hidden_field }}
+  {% endfor %}
+
+  <table >
+    {% for field in form.visible_fields|slice:"4:15" %}
+      <tr>
+        <th>{{ field.label_tag }}</th>
+        <td>
+          {% if field.errors %}
+            <ul>
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          {{ field }}
+          {% if field.help_text %}
+            <br />{{ field.help_text }}
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
+
+    <div id="Tokyo" class="tabcontent">
+        <h2>Afspraakbevestiging met bewoner</h2>
+
+        {% if form.non_field_errors %}
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {% if hidden_field.errors %}
+            <ul>
+                {% for error in hidden_field.errors %}
+                <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        <table >
+            {% for field in form.visible_fields|slice:"15:19" %}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                    <td>
+                        {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {{ field }}
+                        {% if field.help_text %}
+                        <br />{{ field.help_text }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+    <div id="Amsterdam" class="tabcontent">
+        <h2>Voorbereiding met de woningcorporatie (indien mogelijk)</h2>
+
+        {% if form.non_field_errors %}
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {% if hidden_field.errors %}
+            <ul>
+                {% for error in hidden_field.errors %}
+                <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        <table >
+            {% for field in form.visible_fields|slice:"19:23" %}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                    <td>
+                        {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {{ field }}
+                        {% if field.help_text %}
+                        <br />{{ field.help_text }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div id="Woerden" class="tabcontent">
+        <h2>Wensen bespreken</h2>
+
+        {% if form.non_field_errors %}
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {% if hidden_field.errors %}
+            <ul>
+                {% for error in hidden_field.errors %}
+                <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        <table >
+            {% for field in form.visible_fields|slice:"23:30" %}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                    <td>
+                        {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {{ field }}
+                        {% if field.help_text %}
+                        <br />{{ field.help_text }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div id="Oss" class="tabcontent">
+        <h2>Woningtour: Woonkamer</h2>
+
+        {% if form.non_field_errors %}
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {% if hidden_field.errors %}
+            <ul>
+                {% for error in hidden_field.errors %}
+                <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        <table >
+            {% for field in form.visible_fields|slice:"30:38" %}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                    <td>
+                        {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {{ field }}
+                        {% if field.help_text %}
+                        <br />{{ field.help_text }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+    <div id="Heesh" class="tabcontent">
+        <h2>Woningtour: Keuken</h2>
+
+        {% if form.non_field_errors %}
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {% if hidden_field.errors %}
+            <ul>
+                {% for error in hidden_field.errors %}
+                <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        <table >
+            {% for field in form.visible_fields|slice:"38:46" %}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                    <td>
+                        {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {{ field }}
+                        {% if field.help_text %}
+                        <br />{{ field.help_text }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div id="Berghem" class="tabcontent">
+        <h2>Woningtour: Gang</h2>
+
+        {% if form.non_field_errors %}
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {% if hidden_field.errors %}
+            <ul>
+                {% for error in hidden_field.errors %}
+                <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        <table >
+            {% for field in form.visible_fields|slice:"46:52" %}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                    <td>
+                        {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {{ field }}
+                        {% if field.help_text %}
+                        <br />{{ field.help_text }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div id="Lith" class="tabcontent">
+        <h2>Woningtour: CV-Ketel</h2>
+
+        {% if form.non_field_errors %}
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {% if hidden_field.errors %}
+            <ul>
+                {% for error in hidden_field.errors %}
+                <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        <table >
+            {% for field in form.visible_fields|slice:"52:54" %}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                    <td>
+                        {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {{ field }}
+                        {% if field.help_text %}
+                        <br />{{ field.help_text }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div id="Oyen" class="tabcontent">
+        <h2>Woningtour: Slaapkamer</h2>
+
+        {% if form.non_field_errors %}
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {% if hidden_field.errors %}
+            <ul>
+                {% for error in hidden_field.errors %}
+                <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        <table >
+            {% for field in form.visible_fields|slice:"54:61" %}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                    <td>
+                        {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {{ field }}
+                        {% if field.help_text %}
+                        <br />{{ field.help_text }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div id="Geffen" class="tabcontent">
+        <h2>Woningtour: Tuin</h2>
+
+        {% if form.non_field_errors %}
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {% if hidden_field.errors %}
+            <ul>
+                {% for error in hidden_field.errors %}
+                <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        <table >
+            {% for field in form.visible_fields|slice:"61:65" %}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                    <td>
+                        {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {{ field }}
+                        {% if field.help_text %}
+                        <br />{{ field.help_text }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div id="Schaik" class="tabcontent">
+        <h2>Woningtour: Schuur</h2>
+
+        {% if form.non_field_errors %}
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {% if hidden_field.errors %}
+            <ul>
+                {% for error in hidden_field.errors %}
+                <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        <table >
+            {% for field in form.visible_fields|slice:"65:67" %}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                    <td>
+                        {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {{ field }}
+                        {% if field.help_text %}
+                        <br />{{ field.help_text }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+    <div id="Nuland" class="tabcontent">
+        <h2>Bespaaradvies</h2>
+
+        {% if form.non_field_errors %}
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {% if hidden_field.errors %}
+            <ul>
+                {% for error in hidden_field.errors %}
+                <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        <table >
+            {% for field in form.visible_fields|slice:"67:68" %}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                    <td>
+                        {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {{ field }}
+                        {% if field.help_text %}
+                        <br />{{ field.help_text }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</form>
+<script>
+function openCity(evt, cityName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
+
+<script>
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+
+{% endblock %}
