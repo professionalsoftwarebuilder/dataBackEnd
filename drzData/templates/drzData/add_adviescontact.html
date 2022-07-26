@@ -3,17 +3,21 @@
 
 {% block content %}
 <style>
-  ul
-  {
-      list-style: none;
-  }
 
    /* Style the tab */
 .tab {
   overflow: hidden;
   border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  background-color: #d3e1e2;
 }
+
+.cktab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  height: 30px;
+}
+
 
 /* Style the buttons that are used to open the tab content */
 .tab button {
@@ -26,13 +30,31 @@
   transition: 0.3s;
 }
 
+.cktab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 4px 16px;
+  transition: 0.3s;
+}
+
 /* Change background color of buttons on hover */
 .tab button:hover {
   background-color: #ddd;
 }
 
+.cktab button:hover {
+  background-color: #ddd;
+}
+
 /* Create an active/current tablink class */
 .tab button.active {
+  background-color: #ccc;
+}
+
+.cktab button.active {
   background-color: #ccc;
 }
 
@@ -55,6 +77,10 @@
 <form action="" method="post">
     {% csrf_token %}
 
+<div class="cktab">
+  <button class="" >Opslaan</button>
+  <a href="{% url 'drzData:add_adviescontact' %}" ><button type="button" class="" >Nieuw</button></a>
+</div>
 
 <!-- Tab content -->
 <div id="London" class="tabcontent">
@@ -68,7 +94,7 @@
 <!--      {% for field in form|slice:":3" %}-->
 <!--        {% endfor %}-->
 
-    <button>Opslaan</button>
+<!--    <button>Opslaan</button>-->
 </div>
 
 <div id="Paris" class="tabcontent">

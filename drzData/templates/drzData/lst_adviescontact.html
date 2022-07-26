@@ -1,0 +1,45 @@
+{% extends 'baseadmin.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h2>{{ theTitle }}</h2>
+
+<!--    {{ AdviesContact }}-->
+<ul>
+{% for contact in AdviesContact %}
+<!--    {# Each "contact" is a Contact model object. #}-->
+    <li>
+        <div>
+        <div>
+            <a href="{% url 'drzData:upd_adviescontact' contact.id %}">{{ contact.cnt_VoorNm }} {{ contact.cnt_AchterNm }}</a>
+            </div>
+            <div style="padding-left: 26px;">
+        {% if ShowCoachGsprLink == 'True' %}
+            <a href="{% url 'drzData:upd_coachgesprek' contact.coachgesprek.id %}" >Naar Coachgesprek</a>
+        {% endif %}
+                </div>
+        </div>
+    </li>
+{% endfor %}
+</ul>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}

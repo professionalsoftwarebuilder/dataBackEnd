@@ -5,8 +5,10 @@
     <a class="navbar-brand" href="#">
       <img src="{% static 'images/LogoDuurzaamWoerden-32.png' %}" />
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="navbarTogglerDemo02"
+
+    <!-- Let op hier wordt bootstrap 4 gebruikt in bootstrap 5 data-bs-target ipv data-target -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarTogglerDemo02"
             aria-controls="navbarTogglerDemo02"
             aria-expanded="false"
             aria-label="Toggle navigation">
@@ -29,21 +31,28 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'drzData:add_coachgesprek' %}">Coachgesprek</a>
         </li>
-        <!--
         <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-        </li>
-        -->
-      </ul>
-<!--      <form class="d-flex">-->
-<!--        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
-<!--        <button class="btn btn-outline-success" type="submit">Search</button>-->
-<!--      </form>-->
 
-      <div class="collapse navbar-collapse ml-2" id="mainMenu">
-      {% if user.is_authenticated %}
-        <ul class="navbar-nav ml-3">
-          <li class="nav-item dropdown">
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle"
+               href="#" id="OutputMenu"
+               role="button"
+               data-toggle="dropdown"
+               aria-haspopup="true"
+               aria-expanded="false">
+              Output
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="OutputMenu">
+              <a class="dropdown-item" href="{% url 'drzData:lst_adviescontact' %}">Alle Adviescontacten</a>
+              <a class="dropdown-item" href="{% url 'drzData:lst_advcont_opnvraag' %}">Contacten met open vragen</a>
+              <a class="dropdown-item" href="{% url 'drzData:lst_advcont_coachgespr' %}">Contacten met coachgesprek</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Leeg</a>
+            </div>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle"
                href="#" id="userMenu"
                role="button"
@@ -59,19 +68,33 @@
               <a class="dropdown-item" href="{% url 'admin:logout' %}">Log out</a>
             </div>
           </li>
-        </ul>
       {% else %}
+        <li>
         <form class="form-inline ml-auto">
           <a href="{% url 'admin:index' %}" class="btn btn-outline-secondary">Log in</a>
           <!--
           <a href="#" class="btn btn-primary ml-2">Sign up</a>
           -->
         </form>
+          </li>
       {% endif %}
 
 
 
-    </div>
+        <!--
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </li>
+        -->
+      </ul>
+<!--      <form class="d-flex">-->
+<!--        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
+<!--        <button class="btn btn-outline-success" type="submit">Search</button>-->
+<!--      </form>-->
+
+
+
+
 
 
     </div>

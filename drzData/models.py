@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django_countries.fields import CountryField
+from django.urls import reverse
 
 MOTIVATIE_CHS = (
     ('Ml', 'Verlagen maandlasten'),
@@ -288,6 +289,8 @@ class Contact(models.Model):
         ordering = ("cnt_AchterNm", "cnt_VoorNm")
 
 
+
+
 # Heeft ForeignKey in Vraag
 class AdviesContact(Contact):
     cnt_Vastlegger = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_query_name='Genoteerd door', verbose_name='Vastlegger')
@@ -301,12 +304,21 @@ class AdviesContact(Contact):
                 return 'Vraag open'
         return '- - -'
 
+    def CheckCoachGespr(self):
+        if self.coachgesprek_set == None:
+            return False
+        else:
+            return True
+
     def __str__(self):
         return CheckForNone(self.cnt_VoorNm) + CheckForNone(self.cnt_TussenVgsl) + CheckForNone(self.cnt_AchterNm)
 
     class Meta:
         verbose_name_plural = 'Advies contacten'
         ordering = ("cnt_AchterNm", "cnt_VoorNm")
+
+    def get_absolute_url(self):
+        return reverse('drzData:upd_adviescontact', kwargs={'pk': self.id})
 
     CheckOnbeAntw.short_description = 'Vragen'
 
@@ -508,6 +520,9 @@ class CoachGesprek(models.Model):
 
     class Meta:
         verbose_name_plural = 'Coachgesprekken'
+
+    def get_absolute_url(self):
+        return reverse('drzData:upd_coachgesprek', kwargs={'pk': self.id})
 
     def __str__(self):
         return 'Gesprek: ' + str(self.cgs_AdviesContact)  #+ ' / ' + self.wbz_Bezoeken

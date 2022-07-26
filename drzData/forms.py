@@ -128,6 +128,14 @@ class WoninggegevensForm(forms.ModelForm):
         fields = ('wng_TypeWoning', 'wng_Bouwjaar', 'wng_Bewoning')
 
 
+class AdviesContactListForm(forms.ModelForm):
+
+    class Meta:
+        model = AdviesContact
+        fields = ('cnt_VoorNm', 'cnt_TussenVgsl', 'cnt_AchterNm')
+
+
+
 class CoachgesprekForm(forms.ModelForm):
     # cgs_AdviesContact = forms.OneToOneField(AdviesContact, label='Adviescontact', help_text='Kies bijbehorende adviescontact')
     # cgs_AanmeldingWoonCorp = form.CharField(label='Aanmelding Wooncooperatie', choices=AANMELDWOONCORP_CHS, )
