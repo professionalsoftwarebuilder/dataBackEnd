@@ -16,6 +16,7 @@ urlpatterns = [
     path('lst_advcont_opnvraag/', views.lst_advcont_opnvraag.as_view(), name='lst_advcont_opnvraag'),
     path('lst_advcont_coachgespr/', views.lst_advcont_coachgespr.as_view(), name='lst_advcont_coachgespr'),
     path('savewnkbzandnwcont/<int:wnkbz>', views.add_adviescontact.as_view(), name='savewnkbzandnwcont'),
+    path('prnt_lst_advcont/<str:tag>', views.prnt_lst_advcont, name='prnt_lst_advcont'),
 
 ]
 

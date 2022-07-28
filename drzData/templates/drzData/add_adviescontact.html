@@ -72,6 +72,8 @@
   <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'London')">Adviescontact</button>
   <button class="tablinks" onclick="openCity(event, 'Paris')">Woninggegevens</button>
   <button class="tablinks" onclick="openCity(event, 'Tokyo')">Vragen</button>
+  <button class="tablinks" onclick="openCity(event, 'Oss')">Nummers</button>
+  <button class="tablinks" onclick="openCity(event, 'Berghem')">Adressen</button>
 </div>
 
 <form action="" method="post">
@@ -136,6 +138,15 @@
 
 </div>
 
+<div id="Oss" class="tabcontent">
+  <h2>Nummer(s) / e-mail enz.</h2>
+                {{ nummer_formset|crispy }}
+</div>
+
+<div id="Berghem" class="tabcontent">
+  <h2>Adressen (woon adres, post adres, verblijf adres, enz)</h2>
+                {{ adres_formset|crispy }}
+</div>
 
 </form>
 

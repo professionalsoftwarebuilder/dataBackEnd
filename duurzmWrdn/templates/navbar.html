@@ -1,6 +1,12 @@
 {% load static %}
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<style>
+  ul > li {
+    list-style-type: none;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" >
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
       <img src="{% static 'images/LogoDuurzaamWoerden-32.png' %}" />
@@ -15,8 +21,8 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" >
+        <li class="nav-item" style="list-style-type: none;">
           <a class="nav-link active" aria-current="page" href="{% url 'drzData:index' %}">Home</a>
         </li>
         <li class="nav-item">

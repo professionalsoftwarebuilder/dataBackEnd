@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.admin.widgets import AdminSplitDateTime
 from django.forms import widgets
-from .models import Bezoekreden, WinkelBezoek, Exposant, AdviesContact, Vraag, Contact, Woninggegevens, CoachGesprek
+from .models import Bezoekreden, WinkelBezoek, Exposant, \
+    AdviesContact, Vraag, Contact, Woninggegevens, CoachGesprek, Nummer, Adres
 from django.forms import inlineformset_factory
 
 TYPEEXPOSANT_CHS = (
@@ -77,6 +78,8 @@ class AdresForm(forms.ModelForm):
     adr_PostCd = forms.CharField(widget=theWidget, label='Postcode', required=False)
     adr_Notities = forms.CharField(widget=wdgTextA, label='Notities', required=False)
 
+    class Meta:
+        exclude = ('Groep',)
 
 # class AdresGrForm(forms.ModelForm):
 #     adg_HuisNr = forms.CharField(widget=wdgSmall, label='Huisnummer', required=False)
@@ -89,6 +92,9 @@ class AdresForm(forms.ModelForm):
 class NummerForm(forms.ModelForm):
     nmb_Notities = forms.CharField(widget=wdgTextA, label='Notities', required=False,
                                    help_text='Kanttekening bij dit nummer (bijv: meest recent)')
+
+    class Meta:
+        exclude = ('Groep',)
 
 
 # class NummerGrForm(forms.ModelForm):
@@ -239,5 +245,19 @@ WoninggegevensInlineFormset = inlineformset_factory(
     AdviesContact,
     Woninggegevens,
     form=WoninggegevensForm,
+    extra=1,
+)
+
+NummerInlineFormset = inlineformset_factory(
+    AdviesContact,
+    Nummer,
+    form=NummerForm,
+    extra=1,
+)
+
+AdresInlineFormset = inlineformset_factory(
+    AdviesContact,
+    Adres,
+    form=AdresForm,
     extra=1,
 )

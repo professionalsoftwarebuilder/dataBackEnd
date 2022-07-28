@@ -5,12 +5,18 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, FormView, DetailView
 from .models import WinkelBezoek
 from .forms import WinkelBezoekForm, AdviesContactFrontForm, VraagInlineFormset, \
-    WoninggegevensInlineFormset, CoachgesprekForm, AdviesContactListForm
+    WoninggegevensInlineFormset, CoachgesprekForm, AdviesContactListForm, \
+    AdresInlineFormset, NummerInlineFormset
 
 from .models import *
 from django.shortcuts import redirect
 from django.urls import reverse
 
+from django.http import FileResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
 
 def index(request):
     context = {}
@@ -18,6 +24,48 @@ def index(request):
 
 def contact(request):
     return render(request, 'drzData/contact.html', {})
+
+def prnt_lst_advcont(request, tag):
+    # Create byte stream buffer
+    buf = io.BytesIO()
+    # Create a canvas
+    canv = canvas.Canvas(buf, pagesize=letter, bottomup=0)
+    # Create a text object
+    textObj = canv.beginText()
+    textObj.setTextOrigin(inch, inch)
+    textObj.setFont('Courier', 14)
+    contacten = None
+
+    if tag == 'alAdvCnt':
+        contacten = AdviesContact.objects.all()
+
+    if tag == 'AdvCntOpnVrg':
+        contacten = AdviesContact.objects.filter(vraag__vrg_StatusVraag='O')
+
+    if tag == 'AdvCntCchGsp':
+        contacten = AdviesContact.objects.exclude(coachgesprek=None)
+
+    # Add some lines of text
+    lines = []
+
+    for contact in contacten:
+        lines.append(contact.__str__())
+        #lines.append(contact.cnt_Notities)
+        if contact.nummer_set:
+            for nummer in contact.nummer_set.all():
+                lines.append(nummer.nmb_Number)
+        lines.append('- - - - - - - -')
+
+    for line in lines:
+        textObj.textLine(line)
+
+    canv.drawText(textObj)
+    canv.showPage()
+    canv.save()
+    buf.seek(0)
+
+    return FileResponse(buf, as_attachment=True, filename='lst_cont.pdf')
+
 
 
 class savewnkbzandnwcont(View):
@@ -90,7 +138,10 @@ class add_adviescontact(CreateView):
     def get_context_data(self, **kwargs):
         context = super(add_adviescontact, self).get_context_data(**kwargs)
         extraContext = {'vraag_formset': VraagInlineFormset(),
-                        'woninggeg_formset': WoninggegevensInlineFormset()}
+                        'woninggeg_formset': WoninggegevensInlineFormset(),
+                        'nummer_formset': NummerInlineFormset(),
+                        'adres_formset': AdresInlineFormset(),
+                        }
         context.update(extraContext)
         return context
 
@@ -106,6 +157,9 @@ class add_adviescontact(CreateView):
         form = self.get_form(form_class)
         vraag_formset = VraagInlineFormset(self.request.POST)
         woninggeg_formset = WoninggegevensInlineFormset(self.request.POST)
+        nummer_formset = NummerInlineFormset(self.request.POST)
+        adres_formset = AdresInlineFormset(self.request.POST)
+
         if vraag_formset.is_valid():
             print('vraag formset is valid')
         else:
@@ -113,13 +167,15 @@ class add_adviescontact(CreateView):
         #args = (vraag_formset, woninggeg_formset)
         #if form.is_valid() and vraag_formset.is_valid() and woninggeg_formset.is_valid():
         #if form.is_valid() and vraag_formset.is_valid():
-        if form.is_valid() and woninggeg_formset.is_valid():
-            return self.form_valid(form, vraag_formset, woninggeg_formset)
+        #if form.is_valid() and woninggeg_formset.is_valid():
+        if form.is_valid() and woninggeg_formset.is_valid() and \
+                    vraag_formset.is_valid() and nummer_formset.is_valid() and adres_formset.is_valid():
+            return self.form_valid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
             #return self.form_valid(form)
         else:
-            return self.form_invalid(form, vraag_formset, woninggeg_formset)
+            return self.form_invalid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
 
-    def form_valid(self, form, vraag_formset, woninggeg_formset):
+    def form_valid(self, form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset):
     #def form_valid(self, form):
         self.object = form.save(commit=False)
         #ctx = self.get_context_data()
@@ -143,6 +199,8 @@ class add_adviescontact(CreateView):
         # woninggeg_formset = context['woninggeg_formset']
         vragen = vraag_formset.save(commit=False)
         woninggeg = woninggeg_formset.save(commit=False)
+        nummers = nummer_formset.save(commit=False)
+        adressen = adres_formset.save(commit=False)
 
         for vraag in vragen:
             vraag.adviescontact = self.object
@@ -152,11 +210,18 @@ class add_adviescontact(CreateView):
             wgeg.adviescontact = self.object
             self.object.woninggegevens_set.add(wgeg, bulk=False)
 
-        print(str(self.object.id))
+        for nummer in nummers:
+            nummer.adviescontact = self.object
+            self.object.nummer_set.add(nummer, bulk=False)
+
+        for adres in adressen:
+            adres.adviescontact = self.object
+            self.object.adres_set.add(adres, bulk=False)
 
         return redirect(reverse("drzData:upd_adviescontact", kwargs={'pk': self.object.id}))
 
-    def form_invalid(self, form, vraag_formset, woninggeg_formset):
+
+    def form_invalid(self, form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset):
         # context = self.get_context_data()
         # vraag_formset = context['vraag_formset']
         # woninggeg_formset = context['woninggeg_formset']
@@ -187,8 +252,12 @@ class upd_adviescontact(UpdateView):
 
         # extraContext = {'vraag_formset': VraagInlineFormset(kwargs['vraag_formset']),
         #                   'woninggeg_formset': WoninggegevensInlineFormset(kwargs['woninggeg_formset'])}
-        extraContext = {'vraag_formset': VraagInlineFormset(instance = self.object),
-                          'woninggeg_formset': WoninggegevensInlineFormset(instance=self.object)}
+        extraContext = {
+            'vraag_formset': VraagInlineFormset(instance = self.object),
+            'woninggeg_formset': WoninggegevensInlineFormset(instance=self.object),
+            'nummer_formset': NummerInlineFormset(instance=self.object),
+            'adres_formset': AdresInlineFormset(instance=self.object),
+        }
         #extraContext = kwargs
 
         context.update(extraContext)
@@ -205,6 +274,9 @@ class upd_adviescontact(UpdateView):
 
         vraag_formset = VraagInlineFormset(self.request.POST, instance=self.object)
         woninggeg_formset = WoninggegevensInlineFormset(self.request.POST, instance=self.object)
+        nummer_formset = NummerInlineFormset(self.request.POST, instance=self.object)
+        adres_formset = AdresInlineFormset(self.request.POST, instance=self.object)
+
         if vraag_formset.is_valid():
             print('vraag formset is valid')
         else:
@@ -212,13 +284,14 @@ class upd_adviescontact(UpdateView):
         #args = (vraag_formset, woninggeg_formset)
         #if form.is_valid() and vraag_formset.is_valid() and woninggeg_formset.is_valid():
         #if form.is_valid() and vraag_formset.is_valid():
-        if form.is_valid() and woninggeg_formset.is_valid():
-            return self.form_valid(form, vraag_formset, woninggeg_formset)
+        if form.is_valid() and woninggeg_formset.is_valid() and \
+                vraag_formset.is_valid() and nummer_formset.is_valid() and adres_formset.is_valid():
+            return self.form_valid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
             #return self.form_valid(form)
         else:
-            return self.form_invalid(form, vraag_formset, woninggeg_formset)
+            return self.form_invalid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
 
-    def form_valid(self, form, vraag_formset, woninggeg_formset):
+    def form_valid(self, form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset):
     #def form_valid(self, form):
         self.object = form.save()
         self.object.save()
@@ -226,6 +299,8 @@ class upd_adviescontact(UpdateView):
 
         vragen = vraag_formset.save()
         woninggeg = woninggeg_formset.save()
+        nummers = nummer_formset.save()
+        adressen = adres_formset.save()
 
         # for vraag in vragen:
         #     vraag.adviescontact = self.object
@@ -240,7 +315,7 @@ class upd_adviescontact(UpdateView):
 
         return redirect(reverse("drzData:upd_adviescontact", kwargs={'pk': self.object.id}))
 
-    def form_invalid(self, form, vraag_formset, woninggeg_formset):
+    def form_invalid(self, form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset):
         # context = self.get_context_data()
         # vraag_formset = context['vraag_formset']
         # woninggeg_formset = context['woninggeg_formset']
@@ -263,7 +338,7 @@ class dtl_adviescontact(DetailView):
 
 class lst_adviescontact(ListView):
     model = AdviesContact
-    paginate_by = 35
+    paginate_by = 25
     context_object_name = 'AdviesContact'
     form_class = AdviesContactListForm
     template_name = 'drzData/lst_adviescontact.html'
@@ -273,7 +348,8 @@ class lst_adviescontact(ListView):
         context = super(lst_adviescontact, self).get_context_data(**kwargs)
 
         extraContext = {'theTitle': 'Alle adviescontacten',
-                        'ShowCoachGsprLink': 'False'}
+                        'ShowCoachGsprLink': 'False',
+                        'Tag': 'alAdvCnt'}
         context.update(extraContext)
         return context
 
@@ -291,7 +367,8 @@ class lst_advcont_opnvraag(ListView):
         context = super(lst_advcont_opnvraag, self).get_context_data(**kwargs)
 
         extraContext = {'theTitle': 'Adviescontacten met open vragen',
-                        'ShowCoachGsprLink': 'False'}
+                        'ShowCoachGsprLink': 'False',
+                        'Tag': 'AdvCntOpnVrg'}
         context.update(extraContext)
         return context
 
@@ -309,7 +386,8 @@ class lst_advcont_coachgespr(ListView):
         context = super(lst_advcont_coachgespr, self).get_context_data(**kwargs)
 
         extraContext = {'theTitle': 'Adviescontacten met coachgesprekken',
-                        'ShowCoachGsprLink': 'True'}
+                        'ShowCoachGsprLink': 'True',
+                        'Tag': 'AdvCntCchGsp'}
         context.update(extraContext)
         return context
 

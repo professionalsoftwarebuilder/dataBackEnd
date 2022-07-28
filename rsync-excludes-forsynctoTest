@@ -13,6 +13,7 @@ __pycache__/
 opruim
 db.sqlite3
 db.json
+rsync-excludes-forsynctoTest
 rsync-excludes-forbackup
 rsync-excludes-forsync
 scrpt-rsync-sync-samba.txt
@@ -26,5 +27,6 @@ venv04
 venv04/
 venv05/
 .git/
+config/
 nohup.out
 .DJANGO_SECRET_KEY

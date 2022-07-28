@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django_countries.fields import CountryField
 from django.urls import reverse
+from multiselectfield import MultiSelectField
 
 MOTIVATIE_CHS = (
     ('Ml', 'Verlagen maandlasten'),
@@ -435,8 +436,8 @@ class Review(models.Model):
 
 class CoachGesprek(models.Model):
     cgs_AdviesContact = models.OneToOneField(AdviesContact, on_delete=models.CASCADE, blank=True, null=True, help_text='Kies bijbehorende adviescontact', verbose_name='Adviescontact')
-    cgs_AanmeldingWoonCorp = models.CharField('Aanmeldingsrede Wooncooperatie', max_length=2, choices=AANMELDWOONCORP_CHS, blank=True, null=True, help_text='De reden van aanmelding indien aangemeld via wooncooperatie')
-    cgs_AanmeldingZelf = models.CharField('Zelf aangemeld', max_length=2, choices=AANMELDZELF_CHS, blank=True, null=True, help_text='De reden van aanmelding indien zelf aangemeld')
+    cgs_AanmeldingWoonCorp = MultiSelectField('Aanmeldingsrede Wooncooperatie', choices=AANMELDWOONCORP_CHS, blank=True, null=True, help_text='De reden van aanmelding indien aangemeld via wooncooperatie')
+    cgs_AanmeldingZelf = MultiSelectField('Zelf aangemeld', choices=AANMELDZELF_CHS, blank=True, null=True, help_text='De reden van aanmelding indien zelf aangemeld')
     cgs_AanmeldAnders = models.TextField('Anders', blank=True, null=True, help_text='Vermeld hier andere reden voor aanmelding')
     cgs_IsModemAanw = models.BooleanField('Is er modem aanwezig in huis', blank=True, null=True)
     cgs_TypeCentrVent = models.CharField('Type centrale ventilatie', max_length=2, choices=TYPECENTRALEVENT_CHS, blank=True, null=True)
@@ -448,7 +449,7 @@ class CoachGesprek(models.Model):
     cgs_IsWoningToerAangekond = models.BooleanField('Woningtoer aangekondigd', help_text='Is aan de bewonders doorgegeven dat er een Woningtoer is?', blank=True, null=True)
     cgs_EnergieRekBijDeHand = models.BooleanField('Energierekening bij de hand', help_text='Heeft de bewoner de energierekening bij de hand voor tijdens het gesprek?', blank=True, null=True)
     cgs_ElektraMeter = models.CharField('Energiemeter', help_text='Wat voor energiemeter heeft de bewoner?', choices=ENERGIEMETER_CHS, max_length=1, blank=True, null=True)
-    cgs_Motivatie = models.CharField('Motivatie', help_text='Wat is de motivatie voor de aanvraag?', choices=MOTIVATIE_CHS, max_length=2, blank=True, null=True)
+    cgs_Motivatie = MultiSelectField('Motivatie', help_text='Wat is de motivatie voor de aanvraag?', choices=MOTIVATIE_CHS, blank=True, null=True)
     cgs_MotivatieAnders = models.TextField('Andere motivatie', help_text='Andere motivatie dan bovenstaand', blank=True, null=True)
     # Afsraakbevestiging
     cgs_IsDatumTijdBevestigd = models.BooleanField('Datum / Tijd bevestiging', help_text='Is de datum en tijd voor het coachgesprek bevestigd door de bewoner?', blank=True, null=True)
@@ -471,14 +472,14 @@ class CoachGesprek(models.Model):
     # Woningtoer
     # Algemeen
     cgs_TypeThermostaat = models.CharField('Type thermostaat', help_text='?', choices=TYPETHERMOSTAAT_CHS, max_length=1, blank=True, null=True)
-    cgs_TypeRadiatorknop = models.CharField('Type radiatorknop', help_text='Type radiatorknoppen aanwezig in huis?', choices=TYPERADIATORKNOP_CHS, max_length=1, blank=True, null=True)
+    cgs_TypeRadiatorknop = MultiSelectField('Type radiatorknop', help_text='Type radiatorknoppen aanwezig in huis?', choices=TYPERADIATORKNOP_CHS, blank=True, null=True)
     cgs_TypeThermostaat = models.CharField('Type thermostaat', choices=TYPETHERMOSTAAT_CHS, max_length=1, blank=True, null=True)
     cgs_IsAquariumAanw = models.BooleanField('Is er een aquarium aanwezig', help_text='Is er in huis een aquarium aanwezig (ergens in huis)?', blank=True, null=True)
     cgs_IsAircoAanw = models.BooleanField('Is er Airco', help_text='Is er airco aanwezig in huis?', blank=True, null=True)
     # Woonkamer
-    cgs_TypeRaambekleding_Wk = models.CharField('Type raambekleding', help_text='Type raambekleding in de woonkamer?', choices=TYPERAAMBEKLEDING_CHS, max_length=1, blank=True, null=True)
-    cgs_TypeVerlichting_Wk = models.CharField('Type verlichting', help_text='Wat voor type verlichting is er aanwezig in de woonkamer?', choices=TYPEVERLICHTING_CHS, max_length=1, blank=True, null=True)
-    cgs_Problemen_Wk = models.CharField('Problemen woonkamer', help_text='Constateerd u problemen in de woonkamer?', choices=TYPEPROBLEEM_CHS, max_length=1, blank=True, null=True)
+    cgs_TypeRaambekleding_Wk = MultiSelectField('Type raambekleding', help_text='Type raambekleding in de woonkamer?', choices=TYPERAAMBEKLEDING_CHS, blank=True, null=True)
+    cgs_TypeVerlichting_Wk = MultiSelectField('Type verlichting', help_text='Wat voor type verlichting is er aanwezig in de woonkamer?', choices=TYPEVERLICHTING_CHS, blank=True, null=True)
+    cgs_Problemen_Wk = MultiSelectField('Problemen woonkamer', help_text='Constateerd u problemen in de woonkamer?', choices=TYPEPROBLEEM_CHS, blank=True, null=True)
     cgs_OverigOpmerk_Wk = models.TextField('Overige opmerkingen woonkamer', blank=True, null=True)
     #Keuken
     cgs_TypeWasMachGebruik = models.CharField('Type wasmachinegebruik', choices=TYPEWASMACHINEGEBRUIK_CHS, max_length=1, blank=True, null=True)
@@ -486,26 +487,26 @@ class CoachGesprek(models.Model):
     cgs_TypeKookSysteem = models.CharField('Wijze van koken', help_text='Hoe kookt men, welke middelen gebruikt men daarvoor?', choices=TYPEKOOKSYSTEEM_CHS, max_length=1, blank=True, null=True)
     cgs_IsAfzuigingVrij = models.BooleanField('Is afzuiging vrij en schoon?', blank=True, null=True)
     cgs_IsCloseInBoilerAanw = models.BooleanField('Close in boiler aanwezig?', blank=True, null=True)
-    cgs_AanwApperatuur = models.CharField('Aanwezige apparatuur', help_text='Overige aanwezige apperatuur', choices=KEUKENAPPARATUUR_CHS, max_length=2, blank=True, null=True)
-    cgs_Problemen_K = models.CharField('Problemen keuken', help_text='Constateerd u problemen in de keuken?', choices=TYPEPROBLEEM_CHS, max_length=1, blank=True, null=True)
+    cgs_AanwApperatuur = MultiSelectField('Aanwezige apparatuur', help_text='Overige aanwezige apperatuur', choices=KEUKENAPPARATUUR_CHS, blank=True, null=True)
+    cgs_Problemen_K = MultiSelectField('Problemen keuken', help_text='Constateerd u problemen in de keuken?', choices=TYPEPROBLEEM_CHS, blank=True, null=True)
     cgs_OverigOpmerk_K = models.TextField('Overige opmerkingen keuken', blank=True, null=True)
     # Gang
     cgs_IsRadiatorAanw_Gng = models.BooleanField('Radiator aanwezig in gang?', blank=True, null=True)
     cgs_IsBrievenBusAanw_Gng = models.BooleanField('Brievenbus aanwezig in gang?', blank=True, null=True)
-    cgs_TypeVerlichting_Gng = models.CharField('Type verlichting in gang', help_text='Wat voor type verlichting is er aanwezig in de Gang?', choices=TYPEVERLICHTING_CHS, max_length=1, blank=True, null=True)
-    cgs_TypeTochtVoorziening_Gng = models.CharField('Type tochtvoorziening gang', choices=TYPETOCHTVOORZIENING_CHS, max_length=2, blank=True, null=True)
+    cgs_TypeVerlichting_Gng = MultiSelectField('Type verlichting in gang', help_text='Wat voor type verlichting is er aanwezig in de Gang?', choices=TYPEVERLICHTING_CHS, blank=True, null=True)
+    cgs_TypeTochtVoorziening_Gng = MultiSelectField('Type tochtvoorziening gang', choices=TYPETOCHTVOORZIENING_CHS, blank=True, null=True)
     cgs_Problemen_Gng = models.CharField('Problemen gang', help_text='Constateerd u problemen in de gang?', choices=TYPEPROBLEEM_CHS, max_length=1, blank=True, null=True)
     cgs_OverigOpmerk_Gng = models.TextField('Overige opmerkingen gang', blank=True, null=True)
     # CV ketel
     cgs_CVOnderhoud =  models.CharField('Type onderhoud cv ketel', help_text='Welke type onderhoud wordt er gepleegd aan de cb ketel?', choices=TYPECVKETELONDERHOUD_CHS, max_length=1, blank=True, null=True)
     cgs_CVTemperatuur = models.IntegerField('Temperatuur cv ketel', help_text='Op wat voor water temperatuur staat de CV ketel ingestel', blank=True, null=True)
     # Slaapkamer
-    cgs_TypeVerlichting_Slk = models.CharField('Type verlichting slaapkamer', choices=TYPEVERLICHTING_CHS, max_length=1, blank=True, null=True)
+    cgs_TypeVerlichting_Slk = MultiSelectField('Type verlichting slaapkamer', choices=TYPEVERLICHTING_CHS, blank=True, null=True)
     cgs_IsApparatuurStndBy = models.BooleanField('Apparatuur op standby aanwezig slaapkamer?', blank=True, null=True)
     cgs_IsVerwarmd = models.BooleanField('Word verwarming gebruikt in slaapkamer?', blank=True, null=True)
     cgs_IsAircoAanw_Slk = models.BooleanField('Is er Airco in slaapkamer', blank=True, null=True)
-    cgs_TypeBed =  models.CharField('Type bedverwarming', choices=TYPEBEDVERWARMING_CHS, max_length=1, blank=True, null=True)
-    cgs_Problemen_Slk = models.CharField('Problemen slaapkamer', help_text='Constateerd u problemen in de slaapkamer?', choices=TYPEPROBLEEM_CHS, max_length=1, blank=True, null=True)
+    cgs_TypeBed =  MultiSelectField('Type bedverwarming', choices=TYPEBEDVERWARMING_CHS, blank=True, null=True)
+    cgs_Problemen_Slk = MultiSelectField('Problemen slaapkamer', help_text='Constateerd u problemen in de slaapkamer?', choices=TYPEPROBLEEM_CHS, blank=True, null=True)
     cgs_OverigOpmerk_Slk = models.TextField('Overige opmerkingen slaapkamer(s)', blank=True, null=True)
     # Tuin
     cgs_IsTuinVerlAanw = models.BooleanField('Is er tuinverlichting aanwezig?', blank=True, null=True)

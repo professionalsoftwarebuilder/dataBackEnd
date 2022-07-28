@@ -3,8 +3,8 @@
 
 {% block content %}
 
-<h2>{{ theTitle }}</h2>
-
+<h2>{{ theTitle }}</h2><br>
+<a href="{% url 'drzData:prnt_lst_advcont' Tag %}">Print lijst</a>
 <!--    {{ AdviesContact }}-->
 <ul>
 {% for contact in AdviesContact %}
