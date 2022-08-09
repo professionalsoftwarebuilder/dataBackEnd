@@ -1,3 +1,4 @@
+from ckeditor.fields import RichTextField
 from django.db import models
 from django.conf import settings
 from django_countries.fields import CountryField
@@ -517,7 +518,7 @@ class CoachGesprek(models.Model):
     cgs_IsTwedeeKoelkAanw = models.BooleanField('Is er tweede koelkast aanwezig?', help_text='Of vrieskist', blank=True, null=True)
     cgs_OverigOpmerk_Sch = models.TextField('Overige opmerkingen schuur', blank=True, null=True)
     # Het advies
-    cgs_BespaarAdviesTekst = models.TextField('Bespaar advies', blank=True, null=True)
+    cgs_BespaarAdviesTekst = RichTextField('Bespaar advies', blank=True, null=True)
 
     class Meta:
         verbose_name_plural = 'Coachgesprekken'

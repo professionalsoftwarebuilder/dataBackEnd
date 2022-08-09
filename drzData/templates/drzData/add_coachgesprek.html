@@ -92,6 +92,8 @@
   <a href="{% url 'drzData:add_coachgesprek' %}" ><button type="button" class="" >Nieuw</button></a>
 </div>
 
+    {{ form.media }}
+
 <!-- Tab content -->
 <div id="London" class="tabcontent">
   <h2>{% if object %}Wijzig{% else %}Nieuwe{% endif %} Coachgesprek</h2>
