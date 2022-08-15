@@ -5,6 +5,55 @@ from django_countries.fields import CountryField
 from django.urls import reverse
 from multiselectfield import MultiSelectField
 
+STATUSCOACHGESPR_CHS = (
+    ('A', 'Aangemeld'),
+    ('B', 'Gebeld - Ingeplanned'),
+    ('E', 'BevestigingsE-mail verstuurd'),
+    ('G', 'Gesprek geschied'),
+    ('O', 'Advies opgemaakt'),
+    ('F', 'Followup ingeplanned'),
+    ('V', 'Bevestiging followup verstuurd'),
+)
+
+KETELTEMP_CHS = (
+    ('30', '30'),
+    ('40', '40'),
+    ('50', '50'),
+    ('60', '60'),
+    ('70', '70'),
+    ('80', '80'),
+    ('90', '90'),
+)
+
+TYPEWARMTEMTR_WNET_CHS = (
+    ('Vd', 'Verdamping'),
+    ('Jo', 'Joule'),
+    ('M3', 'Kubieke meter'),
+)
+
+TYPEWASDROGER_CHS = (
+    ('C', 'Condens'),
+    ('W', 'Warmtepomp'),
+    ('A', 'Luchtafvoer'),
+)
+
+WARMTENET_CHS = (
+    ('NAlm', 'Nuon Warmte Almere'),
+    ('NAms', 'Nuon Warmte Amsterdam'),
+    ('NDui', 'Nuon Warmte Duiven – West ervoort'),
+    ('NLei', 'Nuon Warmte Leiden'),
+    ('EAme', 'Essent Warmte Amernet'),
+    ('EnDH', 'Eneco warmte Den Haag – Ypenburg'),
+    ('EEns', 'Essent Warmte Enschede'),
+    ('WHel', 'Wamob Helmond'),
+    ('SVPu', 'SV Purmerend'),
+    ('EnRo', 'Eneco Warmte Rotterdam'),
+    ('EnUt', 'Eneco Warmte Ut recht – St ad'),
+    ('EnLR', 'Eneco Warmte Ut recht – Leidsche Rij n'),
+    ('EnNw', 'Eneco Warmte Ut recht – Nieuwegein'),
+)
+
+
 MOTIVATIE_CHS = (
     ('Ml', 'Verlagen maandlasten'),
     ('C', 'Confort verbeteren'),
@@ -24,8 +73,15 @@ KEUKENAPPARATUUR_CHS = (
     ('Cg', 'Contact grill'),
 )
 
-ENERGIEMETER_CHS = (
-    ('G', 'Gewoon'),
+ENERGIEMETERSTROOM_CHS = (
+    ('G', 'Analoog'),
+    ('D', 'Digitaal (niet slim)'),
+    ('S', 'Slimme meter (AMR-meter)'),
+)
+
+ENERGIEMETERGAS_CHS = (
+    ('G', 'Analoog'),
+    ('D', 'Digitaal (niet slim)'),
     ('S', 'Slimme meter'),
 )
 
@@ -73,7 +129,7 @@ TYPEWASMACHINEGEBRUIK_CHS = (
 )
 
 TYPERADIATORKNOP_CHS = (
-    ('G', 'Gewoon'),
+    ('G', 'Standaard'),
     ('T', 'Thermostaat'),
 )
 
@@ -92,8 +148,11 @@ TYPERAAMBEKLEDING_CHS = (
 )
 
 TYPETHERMOSTAAT_CHS = (
-    ('G', 'Gewoon'),
+    ('G', 'Standaard'),
     ('S', 'Met dag nacht stand'),
+    ('P', 'Programmeerbaar'),
+    ('Z', 'Zelflerend'),
+    ('W', 'Weersafhankelijk'),
 )
 
 AANMELDWOONCORP_CHS = (
@@ -436,20 +495,19 @@ class Review(models.Model):
 
 
 class CoachGesprek(models.Model):
-    cgs_AdviesContact = models.OneToOneField(AdviesContact, on_delete=models.CASCADE, blank=True, null=True, help_text='Kies bijbehorende adviescontact', verbose_name='Adviescontact')
+    cgs_AdviesContact = models.OneToOneField(AdviesContact, on_delete=models.CASCADE, blank=True, null=True, help_text='Kies bijbehorende adviescontact', verbose_name='adviescontact')
+    cgs_StatusGesprek = MultiSelectField('Status van Coachgesprek', choices=STATUSCOACHGESPR_CHS, blank=True, null=True, help_text='De verschillende statussen in het traject van de coachgesprek')
     cgs_AanmeldingWoonCorp = MultiSelectField('Aanmeldingsrede Wooncooperatie', choices=AANMELDWOONCORP_CHS, blank=True, null=True, help_text='De reden van aanmelding indien aangemeld via wooncooperatie')
     cgs_AanmeldingZelf = MultiSelectField('Zelf aangemeld', choices=AANMELDZELF_CHS, blank=True, null=True, help_text='De reden van aanmelding indien zelf aangemeld')
     cgs_AanmeldAnders = models.TextField('Anders', blank=True, null=True, help_text='Vermeld hier andere reden voor aanmelding')
     cgs_IsModemAanw = models.BooleanField('Is er modem aanwezig in huis', blank=True, null=True)
     cgs_TypeCentrVent = models.CharField('Type centrale ventilatie', max_length=2, choices=TYPECENTRALEVENT_CHS, blank=True, null=True)
-    cgs_TypeElektraMeter = models.CharField('Energiemeter', help_text='Wat voor energiemeter heeft geconstateerd?', choices=ENERGIEMETER_CHS, max_length=1, blank=True, null=True)
     # Telefonische voorbereiding
     cgs_HuurderInfo = models.TextField('Info huurder', help_text='Wat is er al bekend over de huurder', blank=True, null=True)
     cgs_DatTijdGesprek = models.DateTimeField('Datum en tijd gesprek', help_text='Datum en tijd dat het coachgesprek is ingeplanned', blank=True, null=True)
     cgs_WieAanWezig = models.TextField('Wie gaan aanwezig zijn', help_text='Wie gaan er tijdens het coach gesprek aanwezig zijn', blank=True, null=True)
     cgs_IsWoningToerAangekond = models.BooleanField('Woningtoer aangekondigd', help_text='Is aan de bewonders doorgegeven dat er een Woningtoer is?', blank=True, null=True)
     cgs_EnergieRekBijDeHand = models.BooleanField('Energierekening bij de hand', help_text='Heeft de bewoner de energierekening bij de hand voor tijdens het gesprek?', blank=True, null=True)
-    cgs_ElektraMeter = models.CharField('Energiemeter', help_text='Wat voor energiemeter heeft de bewoner?', choices=ENERGIEMETER_CHS, max_length=1, blank=True, null=True)
     cgs_Motivatie = MultiSelectField('Motivatie', help_text='Wat is de motivatie voor de aanvraag?', choices=MOTIVATIE_CHS, blank=True, null=True)
     cgs_MotivatieAnders = models.TextField('Andere motivatie', help_text='Andere motivatie dan bovenstaand', blank=True, null=True)
     # Afsraakbevestiging
@@ -457,7 +515,9 @@ class CoachGesprek(models.Model):
     cgs_IsDocsKlaarGelegd = models.BooleanField('Documenten klaargelegd', help_text='Zijn de documenten klaargelegd door de coach?', blank=True, null=True)
     cgs_IsWonToerHerAangeKond = models.BooleanField('Woningtoer heraangekondigd', help_text='Is aan de bewonders voor een twede keer doorgegeven dat er een Woningtoer is?', blank=True, null=True)
     cgs_IsInAgendGeplaatst = models.BooleanField('Coachgesprek in agenda coach', help_text='Heeft de coach het gesprek in zijn agenda geplaats?', blank=True, null=True)
-    # Voorbereiding met de woningcorporatie (als mogelijk)
+    # Gegevens verhuurder (als mogelijk)
+    #$# nieuw 1
+    cgs_Verhuurder = models.CharField('Naam verhuurder', help_text='Naam van verhuurder of woningbouwcooperatie', max_length=85, blank=True, null=True)
     cgs_GenomenEnergMaatr = models.TextField('Genomen energie maatregelen', help_text='Zijn er al energiemaatregelen genomen door de woningbouw?', blank=True, null=True)
     cgs_GeplandeEnrgMaatr = models.TextField('Geplande energie maatregelen', help_text='Heeft de woningbouw energiemaatregelen geplanned voor deze woning?', blank=True, null=True)
     cgs_EnergieLabel = models.TextField('Energielabel', help_text='Wat is het energielabel voor deze woning nu en straks?', blank=True, null=True)
@@ -477,6 +537,9 @@ class CoachGesprek(models.Model):
     cgs_TypeThermostaat = models.CharField('Type thermostaat', choices=TYPETHERMOSTAAT_CHS, max_length=1, blank=True, null=True)
     cgs_IsAquariumAanw = models.BooleanField('Is er een aquarium aanwezig', help_text='Is er in huis een aquarium aanwezig (ergens in huis)?', blank=True, null=True)
     cgs_IsAircoAanw = models.BooleanField('Is er Airco', help_text='Is er airco aanwezig in huis?', blank=True, null=True)
+    cgs_TypeElektraMeter = models.CharField('Elektrameter', help_text='Wat voor elektrameter heeft u geconstateerd?', choices=ENERGIEMETERSTROOM_CHS, max_length=1, blank=True, null=True)
+    #$# NIEW 1
+    cgs_TypeGasMeter = models.CharField('Gasmeter', help_text='Wat voor gasmeter heeft u geconstateerd?', choices=ENERGIEMETERGAS_CHS, max_length=1, blank=True, null=True)
     # Woonkamer
     cgs_TypeRaambekleding_Wk = MultiSelectField('Type raambekleding', help_text='Type raambekleding in de woonkamer?', choices=TYPERAAMBEKLEDING_CHS, blank=True, null=True)
     cgs_TypeVerlichting_Wk = MultiSelectField('Type verlichting', help_text='Wat voor type verlichting is er aanwezig in de woonkamer?', choices=TYPEVERLICHTING_CHS, blank=True, null=True)
@@ -484,7 +547,11 @@ class CoachGesprek(models.Model):
     cgs_OverigOpmerk_Wk = models.TextField('Overige opmerkingen woonkamer', blank=True, null=True)
     #Keuken
     cgs_TypeWasMachGebruik = models.CharField('Type wasmachinegebruik', choices=TYPEWASMACHINEGEBRUIK_CHS, max_length=1, blank=True, null=True)
-    cgs_IsKokenMetDeksel = models.BooleanField('Deksel op pan tijdens koken?', blank=True, null=True)
+    #$# wijzig 1
+    cgs_Is_DrogerAanw = models.BooleanField('Is er een wasdroger aanwezig?', blank=True, null=True)
+    #$# nieuw 2
+    cgs_TypeDroger = models.CharField('Type wasdroger', choices=TYPEWASDROGER_CHS, max_length=1, blank=True, null=True)
+    cgs_LeeftKoelk = models.IntegerField('Leeftijd koelkast', blank=True, null=True)
     cgs_TypeKookSysteem = models.CharField('Wijze van koken', help_text='Hoe kookt men, welke middelen gebruikt men daarvoor?', choices=TYPEKOOKSYSTEEM_CHS, max_length=1, blank=True, null=True)
     cgs_IsAfzuigingVrij = models.BooleanField('Is afzuiging vrij en schoon?', blank=True, null=True)
     cgs_IsCloseInBoilerAanw = models.BooleanField('Close in boiler aanwezig?', blank=True, null=True)
@@ -498,9 +565,17 @@ class CoachGesprek(models.Model):
     cgs_TypeTochtVoorziening_Gng = MultiSelectField('Type tochtvoorziening gang', choices=TYPETOCHTVOORZIENING_CHS, blank=True, null=True)
     cgs_Problemen_Gng = models.CharField('Problemen gang', help_text='Constateerd u problemen in de gang?', choices=TYPEPROBLEEM_CHS, max_length=1, blank=True, null=True)
     cgs_OverigOpmerk_Gng = models.TextField('Overige opmerkingen gang', blank=True, null=True)
-    # CV ketel
+    # CV ketel / Warm water
     cgs_CVOnderhoud =  models.CharField('Type onderhoud cv ketel', help_text='Welke type onderhoud wordt er gepleegd aan de cb ketel?', choices=TYPECVKETELONDERHOUD_CHS, max_length=1, blank=True, null=True)
-    cgs_CVTemperatuur = models.IntegerField('Temperatuur cv ketel', help_text='Op wat voor water temperatuur staat de CV ketel ingestel', blank=True, null=True)
+    #$# changed
+    cgs_CVTemperatuur = models.CharField('Temperatuur cv ketel', help_text='Op wat voor water temperatuur staat de CV ketel ingestel', choices=KETELTEMP_CHS, max_length=2, blank=True, null=True)
+    # #$# nieuw 6
+    cgs_CVLeeftijd = models.IntegerField('Leeftijd cv ketel', help_text='Hoeveel jaren oud is de cv ketel', blank=True, null=True)
+    cgs_Is_WarmteNet = models.BooleanField('Aangesloten op wartenet', help_text='Is de woning aangesloten op een warmtenet?', blank=True, null=True)
+    cgs_WarmteNet = models.CharField('Warmtenet', help_text='Op welk warmtenet is het huis aangesloten?', choices=WARMTENET_CHS, max_length=4, blank=True, null=True)
+    cgs_TypeMeterWarmteNet = models.CharField('Warmtenet type meter', choices=TYPEWARMTEMTR_WNET_CHS, max_length=2, blank=True, null=True)
+    cgs_Is_GeiserAanw = models.BooleanField('Is er een geiser aanwezig', blank=True, null=True, default=False)
+    cgs_Is_BoilerAanw = models.BooleanField('Is er een boiler aanwezig', blank=True, null=True, default=False)
     # Slaapkamer
     cgs_TypeVerlichting_Slk = MultiSelectField('Type verlichting slaapkamer', choices=TYPEVERLICHTING_CHS, blank=True, null=True)
     cgs_IsApparatuurStndBy = models.BooleanField('Apparatuur op standby aanwezig slaapkamer?', blank=True, null=True)
@@ -535,8 +610,3 @@ class FollowUp(models.Model):
     Fup_WelkeMaatrGenomen = models.TextField('Welke maatregelen zijn er genomen?', blank=True, null=True)
     Fup_WelkGedragVeranderd = models.TextField('Welke gedrag is er veranderd?', blank=True, null=True)
     Fup_WelkeVerderStappen = models.TextField('Welke verdere stappen kunnen er genomen worden?', blank=True, null=True)
-
-
-
-
-

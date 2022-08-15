@@ -1,4 +1,6 @@
 from datetime import datetime, time
+
+from constance.admin import config
 from django.views import View
 from django.shortcuts import render, HttpResponse
 from django.urls import reverse_lazy
@@ -17,6 +19,8 @@ import io
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
+from django.core.mail import send_mail
+from datetime import datetime
 
 def index(request):
     context = {}
@@ -24,6 +28,40 @@ def index(request):
 
 def contact(request):
     return render(request, 'drzData/contact.html', {})
+
+def snd_bevestcoachgespr(request, pk):
+    #print('In functie')
+    #if request == 'GET':
+    #print('In functie')
+    # Eig moet eerst data worden opgeslagen (in geval er data is gewijzigd)
+    # Bijbehoorende Adviescontact ophalen
+    Gesprek = CoachGesprek.objects.get(id=pk)
+    #Contact = AdviesContact.object.get(id=Gesprek.adviescontact.id)
+    Contact = Gesprek.cgs_AdviesContact
+    Bericht = config.BEVESTIGINGSMAIL_COACHGESPR_BODY.format(Contact.__str__, Gesprek.cgs_DatTijdGesprek)
+    print('bericht opgemaakt')
+    Nummers = Contact.nummer_set.all()
+    ToEmail = None
+    for nummer in Nummers:
+        if nummer.nmb_Medium == 'E':
+            ToEmail = nummer.nmb_Number
+
+    if ToEmail is None:
+        return render(request, 'drzData/add_coachgesprek.html', {'Warning': 'Het e-mail adres van het adviescontact ontbreek (mail niet verzonden)'})
+
+    # Send the e-mail
+    #Email_Adr =
+    send_mail(
+        'Bevestiging afpraak met Energiecoach Duurzaam Woorden', # Subject
+        Bericht, # Message
+        'energiecoach@duurzaamwoerden.nl', # From email
+        ['vlietjames@gmail.com'], # To email
+    )
+    # If success update multiselect
+    # Go back to page
+    return render(request, 'drzData/add_coachgesprek.html', {'Warning': 'Het bevestigins e-mail is met succes verzonden' })
+
+
 
 def prnt_lst_advcont(request, tag):
     # Create byte stream buffer
@@ -93,6 +131,8 @@ class add_winkelbezoek(CreateView):
             print('Winkelbezoek opgeslagen')
             if 'NieuwAdviesCont' in request.POST:
                 return redirect(reverse("drzData:savewnkbzandnwcont", kwargs={'wnkbz': self.object.id}))
+            else:
+                return redirect(reverse("drzData:add_winkelbezoek"))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -250,13 +290,16 @@ class upd_adviescontact(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(upd_adviescontact, self).get_context_data(**kwargs)
 
-        # extraContext = {'vraag_formset': VraagInlineFormset(kwargs['vraag_formset']),
-        #                   'woninggeg_formset': WoninggegevensInlineFormset(kwargs['woninggeg_formset'])}
+        mededeling = ''
+        if 'mededeling' in kwargs:
+            mededeling = kwargs.get('mededeling')
+
         extraContext = {
-            'vraag_formset': VraagInlineFormset(instance = self.object),
+            'vraag_formset': VraagInlineFormset(instance=self.object),
             'woninggeg_formset': WoninggegevensInlineFormset(instance=self.object),
             'nummer_formset': NummerInlineFormset(instance=self.object),
             'adres_formset': AdresInlineFormset(instance=self.object),
+            'mededeling': mededeling
         }
         #extraContext = kwargs
 
@@ -264,7 +307,7 @@ class upd_adviescontact(UpdateView):
         return context
 
     def post(self, request, *args, **kwargs):
-
+        print('in post')
         # Get and prepare the form object
         pk = self.kwargs['pk']
         self.object = self.model.objects.get(id=pk)
@@ -286,6 +329,7 @@ class upd_adviescontact(UpdateView):
         #if form.is_valid() and vraag_formset.is_valid():
         if form.is_valid() and woninggeg_formset.is_valid() and \
                 vraag_formset.is_valid() and nummer_formset.is_valid() and adres_formset.is_valid():
+            print('Form is valid')
             return self.form_valid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
             #return self.form_valid(form)
         else:
@@ -302,7 +346,10 @@ class upd_adviescontact(UpdateView):
         nummers = nummer_formset.save()
         adressen = adres_formset.save()
 
-        # for vraag in vragen:
+        print('bericht opgemaakt')
+
+
+    # for vraag in vragen:
         #     vraag.adviescontact = self.object
         #     self.object.vraag_set.add(vraag, bulk=False)
         #
@@ -412,3 +459,84 @@ class upd_coachgesprek(UpdateView):
     # def get_success_url(self):
     #     self.success_url = reverse_lazy('drzData:upd_coachgesprek', kwargs={'pk': self.object.id})
     #     return self.success_url
+
+    def get_context_data(self, **kwargs):
+        context = super(upd_coachgesprek, self).get_context_data(**kwargs)
+        mededeling = ''
+        if 'mededeling' in kwargs:
+            mededeling = kwargs.get('mededeling')
+
+        extraContext = {
+            'mededeling': mededeling
+        }
+        context.update(extraContext)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        print('in post')
+        # Get and prepare the form object
+        pk = self.kwargs['pk']
+        self.object = self.model.objects.get(id=pk)
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        form.instance = self.object
+
+        if form.is_valid():
+            print('Form is valid')
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.save()
+
+        # Als sendbevestigingsmail geklikt was
+        if 'sendmail' in self.request.POST:
+            Gesprek = self.object
+            Contact = Gesprek.cgs_AdviesContact
+            CoachNm = Contact.cnt_Vastlegger.first_name
+            print(CoachNm)
+            DatumGspr = Gesprek.cgs_DatTijdGesprek.strftime("%d-%m-%Y, %H:%M")
+            Bericht = config.BEVESTIGINGSMAIL_COACHGESPR_BODY.format(Contact, DatumGspr, CoachNm)
+            print('bericht opgemaakt')
+            Onderwerp = 'Afspraakbevestiging bezoek energiecoach duurzaamwoerden op: ' + DatumGspr
+            Nummers = Contact.nummer_set.all()
+            ToEmail = None
+
+            for nummer in Nummers:
+                if nummer.nmb_Medium == 'E':
+                    ToEmail = nummer.nmb_Number
+
+            if ToEmail is None:
+                print('Ontbrekend email adres')
+                self.get_context_data(mededeling='Het e-mail adres van het adviescontact ontbreek (mail niet verzonden)')
+            else:
+                # Send the e-mail
+                # Email_Adr =
+                send_mail(
+                    Onderwerp,  # Subject
+                    Bericht,  # Message
+                    'energiecoach@duurzaamwoerden.nl',  # From email
+                    ['vlietjames@gmail.com'],  # To email
+                    fail_silently=False
+                )
+                print('met success verzonden')
+                self.get_context_data(mededeling='Het bevestigins e-mail is met succes verzonden')
+
+                # If success update multiselect
+                Statussen = Gesprek.cgs_StatusGesprek
+                print(Statussen)
+                if not 'E' in Statussen:
+                    Statussen.append('E')
+                    Gesprek.cgs_StatusGesprek
+                    Gesprek.save()
+
+                # Go back to page
+
+        return redirect(reverse("drzData:upd_coachgesprek", kwargs={'pk': self.object.id}))
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+

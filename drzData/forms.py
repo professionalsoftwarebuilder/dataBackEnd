@@ -159,71 +159,81 @@ class CoachgesprekForm(forms.ModelForm):
         fields = ('cgs_AdviesContact',
                         'cgs_AanmeldingWoonCorp',
                         'cgs_AanmeldingZelf',
-                        'cgs_AanmeldAnders',            # 5 -o- Aanmelding
-                        'cgs_IsModemAanw',              # 5 -i- Telf voorbereiding
-                        'cgs_TypeCentrVent',
-                        'cgs_TypeElektraMeter',
-                        'cgs_HuurderInfo',
+                        'cgs_AanmeldAnders',            # 4 -o- Aanmelding
+                        'cgs_StatusGesprek',            # 5     Status
+                        'cgs_HuurderInfo',              # 6 -i- Telf voorbereiding
                         'cgs_DatTijdGesprek',
                         'cgs_WieAanWezig',
                         'cgs_IsWoningToerAangekond',
                         'cgs_EnergieRekBijDeHand',
-                        'cgs_ElektraMeter',
                         'cgs_Motivatie',
-                        'cgs_MotivatieAnders',          # 15 -o- Telf voorbereiding
-                        'cgs_IsDatumTijdBevestigd',     # 16 -i- Afspraakbevestiging
+                        'cgs_MotivatieAnders',          # 12 -o- Telf voorbereiding
+                        'cgs_IsDatumTijdBevestigd',     # 13 -i- Afspraakbevestiging
                         'cgs_IsDocsKlaarGelegd',
                         'cgs_IsWonToerHerAangeKond',
-                        'cgs_IsInAgendGeplaatst',       # 19 -o- Afspraakbevestiging
-                        'cgs_GenomenEnergMaatr',        # 20 -i- Woningcorperatie
+                        'cgs_IsInAgendGeplaatst',       # 16 -o- Afspraakbevestiging
+                        'cgs_Verhuurder',               # 17 -i- Verhuurder
+                        'cgs_GenomenEnergMaatr',
                         'cgs_GeplandeEnrgMaatr',
                         'cgs_EnergieLabel',
-                        'cgs_BekendeProbl',             # 23 -o- Woningcorperatie
-                        'cgs_RedenEnergBesp',           # 24 -i- Wensen bespreken
+                        'cgs_BekendeProbl',             # 21 -o- Verhuurder
+                        'cgs_RedenEnergBesp',           # 22 -i- Wensen bespreken
                         'cgs_RedenEnergBespAnderen',
                         'cgs_ToekomstPlanWoning',
                         'cgs_MetWieHierWonen',
                         'cgs_BudgetKlMaatr',
                         'cgs_IetsGedaanEnrgMaatr',
-                        'cgs_AfwijkEnergRek',           # 30 -o- Wensen bespreken
-                        'cgs_TypeThermostaat',          # 31 -i- Woonkamer
+                        'cgs_AfwijkEnergRek',           # 28 -o- Wensen bespreken
+                        'cgs_TypeElektraMeter',         # 29 -i- Algemeen
+                        'cgs_TypeGasMeter',
                         'cgs_TypeRadiatorknop',
                         'cgs_IsAquariumAanw',
-                        'cgs_IsAircoAanw',
+                        'cgs_IsModemAanw',
+                        'cgs_TypeCentrVent',
+                        'cgs_IsAircoAanw',              # 35 -o- Algemeen
+                        'cgs_TypeThermostaat',          # 36 -i- Woonkamer
                         'cgs_TypeRaambekleding_Wk',
                         'cgs_TypeVerlichting_Wk',
                         'cgs_Problemen_Wk',
-                        'cgs_OverigOpmerk_Wk',          # 38 -o- Woonkamer
-                        'cgs_TypeWasMachGebruik',       # 39 -i- Keuken
-                        'cgs_IsKokenMetDeksel',
+                        'cgs_OverigOpmerk_Wk',          # 40 -o- Woonkamer
+                        'cgs_TypeWasMachGebruik',       # 41 -i- Keuken
+                        'cgs_Is_DrogerAanw',
+                        'cgs_TypeDroger',
+                        'cgs_LeeftKoelk',
                         'cgs_TypeKookSysteem',
                         'cgs_IsAfzuigingVrij',
                         'cgs_IsCloseInBoilerAanw',
                         'cgs_AanwApperatuur',
                         'cgs_Problemen_K',
-                        'cgs_OverigOpmerk_K',           # 46 -o- Keuken
-                        'cgs_IsRadiatorAanw_Gng',       # 47 -i- Gang
+                        'cgs_OverigOpmerk_K',           # 50 -o- Keuken
+                        'cgs_IsRadiatorAanw_Gng',       # 51 -i- Gang
                         'cgs_IsBrievenBusAanw_Gng',
                         'cgs_TypeVerlichting_Gng',
                         'cgs_TypeTochtVoorziening_Gng',
                         'cgs_Problemen_Gng',
-                        'cgs_OverigOpmerk_Gng',         # 52 -o- Gang
-                        'cgs_CVOnderhoud',              # 53 -i- CV ketel
-                        'cgs_CVTemperatuur',            # 54 -o- CV ketel
-                        'cgs_TypeVerlichting_Slk',      # 55 -i- Slaapkamer
+                        'cgs_OverigOpmerk_Gng',         # 56 -o- Gang
+                        'cgs_CVOnderhoud',              # 57 -i- CV / Warm water
+                        'cgs_CVTemperatuur',
+                        'cgs_CVLeeftijd',
+                        'cgs_Is_WarmteNet',
+                        'cgs_WarmteNet',
+                        'cgs_TypeMeterWarmteNet',
+                        'cgs_Is_GeiserAanw',
+                        'cgs_Is_BoilerAanw',            # 64 -o- CV / Warm water
+                        'cgs_TypeVerlichting_Slk',      # 65 -i- Slaapkamer
                         'cgs_IsApparatuurStndBy',
                         'cgs_IsVerwarmd',
                         'cgs_IsAircoAanw_Slk',
                         'cgs_TypeBed',
                         'cgs_Problemen_Slk',
-                        'cgs_OverigOpmerk_Slk',         # 61 -o- Slaapkamer
-                        'cgs_IsTuinVerlAanw',           # 62 -i- Tuin
+                        'cgs_OverigOpmerk_Slk',         # 71 -o- Slaapkamer
+                        'cgs_IsTuinVerlAanw',           # 72 -i- Tuin
                         'cgs_IsVijverpompAanw',
                         'cgs_IsTerrasVerwAanw',
-                        'cgs_OverigOpmerk_Tn',          # 65 -o- Tuin
-                        'cgs_IsTwedeeKoelkAanw',        # 66 -i- Schuur
-                        'cgs_OverigOpmerk_Sch',         # 67 -o- Schuur
-                        'cgs_BespaarAdviesTekst',)
+                        'cgs_OverigOpmerk_Tn',          # 75 -o- Tuin
+                        'cgs_IsTwedeeKoelkAanw',        # 76 -i- Schuur
+                        'cgs_OverigOpmerk_Sch',         # 77 -o- Schuur
+                        'cgs_BespaarAdviesTekst',)      # 78
 
 
 
