@@ -1,5 +1,5 @@
 from datetime import datetime, time
-
+from django.contrib import messages
 from constance.admin import config
 from django.views import View
 from django.shortcuts import render, HttpResponse
@@ -19,7 +19,7 @@ import io
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from datetime import datetime
 
 def index(request):
@@ -290,18 +290,12 @@ class upd_adviescontact(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(upd_adviescontact, self).get_context_data(**kwargs)
 
-        mededeling = ''
-        if 'mededeling' in kwargs:
-            mededeling = kwargs.get('mededeling')
-
         extraContext = {
             'vraag_formset': VraagInlineFormset(instance=self.object),
             'woninggeg_formset': WoninggegevensInlineFormset(instance=self.object),
             'nummer_formset': NummerInlineFormset(instance=self.object),
             'adres_formset': AdresInlineFormset(instance=self.object),
-            'mededeling': mededeling
         }
-        #extraContext = kwargs
 
         context.update(extraContext)
         return context
@@ -449,33 +443,39 @@ class add_coachgesprek(CreateView):
     #     self.success_url = reverse_lazy('drzData:upd_coachgesprek', kwargs={'pk': self.object.id})
     #     return self.success_url
 
+theVar = ''
 
 class upd_coachgesprek(UpdateView):
     model = CoachGesprek
     form_class = CoachgesprekForm
     template_name = 'drzData/add_coachgesprek.html'
-    # #success_url = reverse_lazy('drzData:upd_coachgesprek')
-    #
-    # def get_success_url(self):
-    #     self.success_url = reverse_lazy('drzData:upd_coachgesprek', kwargs={'pk': self.object.id})
-    #     return self.success_url
+    CtrlField = 'Hallo'
 
     def get_context_data(self, **kwargs):
         context = super(upd_coachgesprek, self).get_context_data(**kwargs)
-        mededeling = ''
-        if 'mededeling' in kwargs:
-            mededeling = kwargs.get('mededeling')
-
-        extraContext = {
-            'mededeling': mededeling
-        }
-        context.update(extraContext)
+        global theVar
+        #context['CtrlField'] = self.CtrlField
+        #context['CtrlField'] = self.request.POST.get('theTab')
+        context['CtrlField'] = theVar
+        #print(context)
         return context
+
 
     def post(self, request, *args, **kwargs):
         print('in post')
+        global theVar
         # Get and prepare the form object
         pk = self.kwargs['pk']
+        # if 'Ctrl' in kwargs:
+        #     self.CtrlField = kwargs.get('Ctrl')
+
+        theTab = request.POST.get('theTab')
+        if theTab:
+            #self.CtrlField = theTab
+            theVar = theTab
+
+        print(self.CtrlField)
+
         self.object = self.model.objects.get(id=pk)
         form_class = self.get_form_class()
         form = self.get_form(form_class)
@@ -496,7 +496,8 @@ class upd_coachgesprek(UpdateView):
             Gesprek = self.object
             Contact = Gesprek.cgs_AdviesContact
             CoachNm = Contact.cnt_Vastlegger.first_name
-            print(CoachNm)
+            BccMail = Contact.cnt_Vastlegger.email
+            print(BccMail)
             DatumGspr = Gesprek.cgs_DatTijdGesprek.strftime("%d-%m-%Y, %H:%M")
             Bericht = config.BEVESTIGINGSMAIL_COACHGESPR_BODY.format(Contact, DatumGspr, CoachNm)
             print('bericht opgemaakt')
@@ -510,27 +511,44 @@ class upd_coachgesprek(UpdateView):
 
             if ToEmail is None:
                 print('Ontbrekend email adres')
-                self.get_context_data(mededeling='Het e-mail adres van het adviescontact ontbreek (mail niet verzonden)')
+                messages.success(self.request, f'Het e-mail adres van het adviescontact ontbreek (mail niet verzonden)')
             else:
                 # Send the e-mail
-                # Email_Adr =
-                send_mail(
-                    Onderwerp,  # Subject
-                    Bericht,  # Message
-                    'energiecoach@duurzaamwoerden.nl',  # From email
-                    ['vlietjames@gmail.com'],  # To email
-                    fail_silently=False
-                )
-                print('met success verzonden')
-                self.get_context_data(mededeling='Het bevestigins e-mail is met succes verzonden')
 
-                # If success update multiselect
-                Statussen = Gesprek.cgs_StatusGesprek
-                print(Statussen)
-                if not 'E' in Statussen:
-                    Statussen.append('E')
-                    Gesprek.cgs_StatusGesprek
-                    Gesprek.save()
+                # email = EmailMessage(
+                #     'Hello',
+                #     'Body goes here',
+                #     'from@example.com',
+                #     ['to1@example.com', 'to2@example.com'],
+                #     ['bcc@example.com'],
+                #     reply_to=['another@example.com'],
+                #     headers={'Message-ID': 'foo'},
+                # )
+                SndSuc = True
+                try:
+                    email = EmailMessage(
+                        Onderwerp,  # Subject
+                        Bericht,  # Message
+                        'energiecoach@duurzaamwoerden.nl',  # From email
+                        [ToEmail],  # To email
+                        [BccMail]
+                    )
+                    email.send(fail_silently=False)
+                except:
+                    SndSuc = False
+                    messages.success(self.request, f'Er ging iets fout tijdens het verzenden van de bevestigingsmail')
+
+                if SndSuc:
+                    print('met success verzonden')
+                    messages.success(self.request, f'Het bevestigins e-mail is met succes verzonden')
+
+                    # If success update multiselect
+                    Statussen = Gesprek.cgs_StatusGesprek
+                    print(Statussen)
+                    if not 'E' in Statussen:
+                        Statussen.append('E')
+                        Gesprek.cgs_StatusGesprek
+                        Gesprek.save()
 
                 # Go back to page
 

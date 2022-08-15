@@ -69,30 +69,31 @@
 
 <!-- Tab links -->
 <div class="tab">
-  <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'London')">Initiatie</button>
-  <button class="tablinks" onclick="openCity(event, 'Magaren')">Status</button>
-  <button class="tablinks" onclick="openCity(event, 'Paris')">Telefonische voorbereiding</button>
-  <button class="tablinks" onclick="openCity(event, 'Tokyo')">Afspraakbevestiging</button>
-  <button class="tablinks" onclick="openCity(event, 'Amsterdam')">Verhuurder</button>
-  <button class="tablinks" onclick="openCity(event, 'Woerden')">Wensen</button>
-  <button class="tablinks" onclick="openCity(event, 'Vinkel')">Algemeen</button>
-  <button class="tablinks" onclick="openCity(event, 'Oss')">Woonkamer</button>
-  <button class="tablinks" onclick="openCity(event, 'Heesh')">Keuken</button>
-  <button class="tablinks" onclick="openCity(event, 'Berghem')">Gang</button>
-  <button class="tablinks" onclick="openCity(event, 'Lith')">CV / Warm water</button>
-  <button class="tablinks" onclick="openCity(event, 'Oyen')">Slaapkamer</button>
-  <button class="tablinks" onclick="openCity(event, 'Geffen')">Tuin</button>
-  <button class="tablinks" onclick="openCity(event, 'Schaik')">Schuur</button>
-  <button class="tablinks" onclick="openCity(event, 'Nuland')">Bespaaradvies</button>
+  <button class="tablinks" id="defaultOpen" name="London" onclick="openCity(event, 'London')">Initiatie</button>
+  <button class="tablinks" name='Magaren' onclick="openCity(event, 'Magaren')">Status</button>
+  <button class="tablinks" name='Paris' onclick="openCity(event, 'Paris')">Telefonische voorbereiding</button>
+  <button class="tablinks" name='Tokyo' onclick="openCity(event, 'Tokyo')">Afspraakbevestiging</button>
+  <button class="tablinks" name='Amsterdam' onclick="openCity(event, 'Amsterdam')">Verhuurder</button>
+  <button class="tablinks" name='Woerden' onclick="openCity(event, 'Woerden')">Wensen</button>
+  <button class="tablinks" name='Vinkel' onclick="openCity(event, 'Vinkel')">Algemeen</button>
+  <button class="tablinks" name='Oss' onclick="openCity(event, 'Oss')">Woonkamer</button>
+  <button class="tablinks" name='Heesh' onclick="openCity(event, 'Heesh')">Keuken</button>
+  <button class="tablinks" name='Berghem' onclick="openCity(event, 'Berghem')">Gang</button>
+  <button class="tablinks" name='Lith' onclick="openCity(event, 'Lith')">CV / Warm water</button>
+  <button class="tablinks" name='Oyen' onclick="openCity(event, 'Oyen')">Slaapkamer</button>
+  <button class="tablinks" name='Geffen' onclick="openCity(event, 'Geffen')">Tuin</button>
+  <button class="tablinks" name='Schaik' onclick="openCity(event, 'Schaik')">Schuur</button>
+  <button class="tablinks" name='Nuland' onclick="openCity(event, 'Nuland')">Bespaaradvies</button>
 </div>
 
 <form action="" method="post">
     {% csrf_token %}
+    <input type="hidden" id="theTab", name="theTab">
 
-<div class="cktab">
-  <button class="" >Opslaan</button>
-  <a href="{% url 'drzData:add_coachgesprek' %}" ><button type="button" class="" >Nieuw</button></a>
-</div>
+    <div class="cktab">
+      <button class="" >Opslaan</button>
+      <a href="{% url 'drzData:add_coachgesprek' %}" ><button type="button" class="" >Nieuw</button></a>
+    </div>
 
     {{ form.media }}
 
@@ -160,8 +161,21 @@
         </div>
 
         <div class="cktab">
-            {% if mededeling != '' %}
-                {{ mededeling }}
+<!--            {% if object_list.mededeling != '' %}-->
+<!--                {{ object.mededeling }}-->
+<!--            {% endif %}-->
+<!--            {% if CtrlField %}-->
+<!--                hallo {{ CtrlField }}-->
+<!--            {% else %}-->
+<!--                geen Ctrl object-->
+<!--            {% endif %}-->
+
+             {% if messages %}
+               {% for message in messages %}
+<!--                    <div>-->
+                    {{message}}
+<!--                    </div>-->
+               {% endfor %}
             {% endif %}
         </div>
      {% if form.non_field_errors %}
@@ -801,12 +815,19 @@ function openCity(evt, cityName) {
   // Show the current tab, and add an "active" class to the button that opened the tab
   document.getElementById(cityName).style.display = "block";
   evt.currentTarget.className += " active";
+
+  document.getElementById('theTab').value = cityName;
+
 }
 </script>
 
 <script>
 // Get the element with id="defaultOpen" and click on it
+{% if CtrlField %}
+document.getElementsByName("{{ CtrlField }}")[0].click();
+{% else %}
 document.getElementById("defaultOpen").click();
+{% endif %}
 </script>
 
 {% endblock %}
