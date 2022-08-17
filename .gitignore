@@ -1,4 +1,10 @@
 static/
 __pycache__/
+.env
 .DJANGO_SECRET_KEY
 dist/
+scrpt-rsync-sync-to-vimxx.txt
+scrpt-rsync-sync.txt
+scrpt-rsync-backup.txt
+scrpt-rsync-synctoTest.txt
+scrpt-rsync-vh-sync.txt
