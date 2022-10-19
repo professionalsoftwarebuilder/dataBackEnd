@@ -95,6 +95,7 @@ TYPEPROBLEEM_CHS = (
     ('S', 'Schimmel'),
     ('V', 'Vocht'),
     ('G', 'Geluid'),
+    ('N', 'Geen'),
 )
 
 TYPECVKETELONDERHOUD_CHS = (
@@ -186,7 +187,6 @@ ACTIESTATUS_CHS = (
     ('U', 'In Uitvoering'),
     ('V', 'Volbracht'),
 )
-
 
 CNTHOEDANIGHEID_CHS = (
     ('W', 'Bedrijf'),
@@ -495,7 +495,7 @@ class Review(models.Model):
 
 
 class CoachGesprek(models.Model):
-    cgs_AdviesContact = models.OneToOneField(AdviesContact, on_delete=models.CASCADE, blank=True, null=True, help_text='Kies bijbehorende adviescontact', verbose_name='adviescontact')
+    cgs_AdviesContact = models.OneToOneField(AdviesContact, on_delete=models.CASCADE, blank=False, null=False, help_text='Kies bijbehorende adviescontact', verbose_name='adviescontact')
     cgs_StatusGesprek = MultiSelectField('Status van Coachgesprek', choices=STATUSCOACHGESPR_CHS, blank=True, null=True, help_text='De verschillende statussen in het traject van de coachgesprek')
     cgs_AanmeldingWoonCorp = MultiSelectField('Aanmeldingsrede Wooncooperatie', choices=AANMELDWOONCORP_CHS, blank=True, null=True, help_text='De reden van aanmelding indien aangemeld via wooncooperatie')
     cgs_AanmeldingZelf = MultiSelectField('Zelf aangemeld', choices=AANMELDZELF_CHS, blank=True, null=True, help_text='De reden van aanmelding indien zelf aangemeld')

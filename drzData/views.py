@@ -493,62 +493,65 @@ class upd_coachgesprek(UpdateView):
 
         # Als sendbevestigingsmail geklikt was
         if 'sendmail' in self.request.POST:
+            print('mail verzenden')
+            SndSuc = True
             Gesprek = self.object
             Contact = Gesprek.cgs_AdviesContact
             CoachNm = Contact.cnt_Vastlegger.first_name
             BccMail = Contact.cnt_Vastlegger.email
             print(BccMail)
-            DatumGspr = Gesprek.cgs_DatTijdGesprek.strftime("%d-%m-%Y, %H:%M")
-            Bericht = config.BEVESTIGINGSMAIL_COACHGESPR_BODY.format(Contact, DatumGspr, CoachNm)
-            print('bericht opgemaakt')
-            Onderwerp = 'Afspraakbevestiging bezoek energiecoach duurzaamwoerden op: ' + DatumGspr
-            Nummers = Contact.nummer_set.all()
-            ToEmail = None
+            if Gesprek.cgs_DatTijdGesprek:
+                DatumGspr = Gesprek.cgs_DatTijdGesprek.strftime("%d-%m-%Y, %H:%M")
+                Bericht = config.BEVESTIGINGSMAIL_COACHGESPR_BODY.format(Contact, DatumGspr, CoachNm)
+                print('bericht opgemaakt')
+                Onderwerp = 'Afspraakbevestiging bezoek energiecoach duurzaamwoerden op: ' + DatumGspr
 
-            for nummer in Nummers:
-                if nummer.nmb_Medium == 'E':
-                    ToEmail = nummer.nmb_Number
 
-            if ToEmail is None:
-                print('Ontbrekend email adres')
-                messages.success(self.request, f'Het e-mail adres van het adviescontact ontbreek (mail niet verzonden)')
+                Nummers = Contact.nummer_set.all()
+                ToEmail = None
+
+                for nummer in Nummers:
+                    if nummer.nmb_Medium == 'E':
+                        ToEmail = nummer.nmb_Number
+
+                if ToEmail is None:
+                    print('Ontbrekend email adres')
+                    messages.success(self.request, f'Het e-mail adres van het adviescontact ontbreek (mail niet verzonden)')
+                    SndSuc = False
+
+
+
+
             else:
-                # Send the e-mail
+                SndSuc = False
+                messages.success(self.request, f'Datum en/of tijd van de afspraak ontbreekt (mail niet verzonden)')
 
-                # email = EmailMessage(
-                #     'Hello',
-                #     'Body goes here',
-                #     'from@example.com',
-                #     ['to1@example.com', 'to2@example.com'],
-                #     ['bcc@example.com'],
-                #     reply_to=['another@example.com'],
-                #     headers={'Message-ID': 'foo'},
-                # )
-                SndSuc = True
+
+            if SndSuc:
                 try:
                     email = EmailMessage(
                         Onderwerp,  # Subject
                         Bericht,  # Message
                         'energiecoach@duurzaamwoerden.nl',  # From email
                         [ToEmail],  # To email
-                        [BccMail]
+                        [BccMail, 'energiecoach@duurzaamwoerden.nl']
                     )
                     email.send(fail_silently=False)
                 except:
                     SndSuc = False
                     messages.success(self.request, f'Er ging iets fout tijdens het verzenden van de bevestigingsmail')
 
-                if SndSuc:
-                    print('met success verzonden')
-                    messages.success(self.request, f'Het bevestigins e-mail is met succes verzonden')
+            if SndSuc:
+                print('met success verzonden')
+                messages.success(self.request, f'Het bevestigins e-mail is met succes verzonden')
 
-                    # If success update multiselect
-                    Statussen = Gesprek.cgs_StatusGesprek
-                    print(Statussen)
-                    if not 'E' in Statussen:
-                        Statussen.append('E')
-                        Gesprek.cgs_StatusGesprek
-                        Gesprek.save()
+                # If success update multiselect
+                Statussen = Gesprek.cgs_StatusGesprek
+                print(Statussen)
+                if not 'E' in Statussen:
+                    Statussen.append('E')
+                    Gesprek.cgs_StatusGesprek
+                    Gesprek.save()
 
                 # Go back to page
 

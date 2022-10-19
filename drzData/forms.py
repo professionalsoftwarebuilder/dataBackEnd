@@ -1,9 +1,12 @@
+from datetime import datetime
+
 from django import forms
 from django.contrib.admin.widgets import AdminSplitDateTime
 from django.forms import widgets
 from .models import Bezoekreden, WinkelBezoek, Exposant, \
     AdviesContact, Vraag, Contact, Woninggegevens, CoachGesprek, Nummer, Adres
 from django.forms import inlineformset_factory
+from .widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
 
 TYPEEXPOSANT_CHS = (
     ('O', 'Bedrijf'),
@@ -48,7 +51,7 @@ class AdviesContactFrontForm(forms.ModelForm):
     cnt_TussenVgsl = forms.CharField(widget=theWidget, label='Tussenvoegsels', required=False)
     cnt_VoorLtrs = forms.CharField(widget=theWidget, label='Voorletters', required=False)
     cnt_Notities = forms.CharField(widget=wdgTextA, label='Notities', required=False)
-    cnt_DatVastlegging = forms.SplitDateTimeField(widget=AdminSplitDateTime, label='Tijdstip vastgelegd')
+    cnt_DatVastlegging = forms.SplitDateTimeField(widget=AdminSplitDateTime, initial=datetime.today(), label='Tijdstip vastgelegd')
 
     class Meta:
         model = AdviesContact
@@ -102,18 +105,22 @@ class NummerForm(forms.ModelForm):
 
 
 class WinkelBezoekForm(forms.ModelForm):
-    wbz_TijdStip = forms.SplitDateTimeField(widget=AdminSplitDateTime, label='Tijdstip van bezoek')
+    wbz_TijdStip = forms.SplitDateTimeField(widget=AdminSplitDateTime, initial=datetime.today(), label='Tijdstip van bezoek')
     wbz_Bezoeken = forms.ModelMultipleChoiceField(
         queryset=Bezoekreden.objects.all(),
         widget=forms.CheckboxSelectMultiple(attrs={'style': 'list-style-type:none;'}),
         # empty_label='Geen bezoekredenen in systeem aanwezig',
         label='Bezoekreden(en)',
     )
-    wbz_Notities = forms.CharField(widget=wdgTextA, label='Notities')
+    wbz_Notities = forms.CharField(widget=wdgTextA, required=False, label='Notities')
 
     class Meta:
         model = WinkelBezoek
         fields = ('wbz_TijdStip', 'wbz_Bezoeken', 'wbz_Notities')
+
+        # widgets = {
+        #     'wbz_TijdStip': DateTimePickerInput(),
+        # }
 
 
 class VraagForm(forms.ModelForm):

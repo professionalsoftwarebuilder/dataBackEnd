@@ -11,10 +11,10 @@ bind = "0.0.0.0:9520"
 # Restart workers when code changes (development only!)
 reload = True
 # Write access and error info to /var/log
-accesslog = errorlog = "/var/log/gunicorn/dev.log"
+accesslog = errorlog = "/var/log/gunicorn/dev-drzm.log"
 # Redirect stdout/stderr to log file
 capture_output = True
 # PID file so you can easily fetch process ID
-pidfile = "/var/run/gunicorn/dev.pid"
+pidfile = "/var/run/gunicorn/dev-drzm.pid"
 # Daemonize the Gunicorn process (detach & enter background)
 daemon = True

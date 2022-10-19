@@ -1,4 +1,4 @@
-env
+#env
 venv
 scrpt-rsync-backup.txt
 README.md
@@ -19,12 +19,15 @@ scrpt-rsync-sync-samba.txt
 scrpt-rsync-sync.txt
 scrpt-rsync-synctoTest.txt
 .vscode
+.gitignore
 media_root
 Voorbeelden/
 Voorbeelden
 venv04
 venv04/
 venv05/
+static/
+media/
 .git/
 nohup.out
 .DJANGO_SECRET_KEY
