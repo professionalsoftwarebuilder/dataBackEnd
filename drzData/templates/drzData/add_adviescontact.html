@@ -120,10 +120,40 @@
 
 <div id="Tokyo" class="tabcontent">
   <h2>Vraag / vragen bij dit Adviescontact</h2>
+
+
+<!--    #$# 010 replace   -->
+
 <!--<form action="" method="post">-->
 <!--    {% csrf_token %}-->
-<!--               {{ vraag_formset.management_form }}-->
-                {{ vraag_formset|crispy }}
+               {{ vraag_formset.management_form }}
+
+
+                {% for vrgform in vraag_formset.forms %}
+                <div class='table'>
+                    {% if vrgform.instance.id %}
+                        <a href="{% url 'drzData:mail_vraag' vrgform.instance.id form.instance.id  %}" class="btn btn-info" >Stuur bevestigings e-mail naar contact</a>
+                        <div class="cktab">
+                             {% if messages %}
+                               {% for message in messages %}
+                <!--                    <div>-->
+                                    {{message}}
+                <!--                    </div>-->
+                               {% endfor %}
+                            {% endif %}
+                        </div>
+
+
+                    {% endif %}
+
+                <table class='no_error'>
+                    {{ vrgform.as_table }}
+                </table>
+                </div>
+                {% endfor %}
+
+
+
 
 
 <!--                {% for form in vraag_formset %}-->

@@ -5,6 +5,8 @@ from django.views import View
 from django.shortcuts import render, HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, FormView, DetailView
+from model_utils.models import now
+
 from .models import WinkelBezoek
 from .forms import WinkelBezoekForm, AdviesContactFrontForm, VraagInlineFormset, \
     WoninggegevensInlineFormset, CoachgesprekForm, AdviesContactListForm, \
@@ -354,6 +356,8 @@ class upd_adviescontact(UpdateView):
         # dikt = {'vraag_formset': vragen, 'woninggeg_formset': woninggeg}
         # self.get_context_data(dikt)
 
+                # Go back to page
+
         return redirect(reverse("drzData:upd_adviescontact", kwargs={'pk': self.object.id}))
 
     def form_invalid(self, form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset):
@@ -561,3 +565,62 @@ class upd_coachgesprek(UpdateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
+def mail_vraag(request, vrg_id, cnt_id):
+    deVraag = Vraag.objects.get(id=vrg_id)
+    print('mail verzenden')
+    SndSuc = True
+    # De adviescontact
+    Contact = deVraag.Contact
+    # De Afhandelaars
+    Afhandelaars = deVraag.vrg_Afhandelaren.all()
+    # Haal mail adressen op
+    BccMails = []
+    for afhnd in Afhandelaars:
+        BccMails.append(afhnd.email)
+
+    BccMail = config.BCC_MAILADRESS_BEVESTIGINGSMAIL_ADVIESCONTACTVRAAG
+    BccMails.append(BccMail)
+    print(BccMails)
+    # Tijdstip dat vraag gesteld is, is niet bekend eigenlijk, hoeft niet zelfde te zijn als tijdstip registratie adviescontact
+    #currentdate = datetime.now()
+    #DatumVrg = currentdate.strftime("%d-%m-%Y, %H:%M")  #deVraag.cgs_DatTijdGesprek.strftime("%d-%m-%Y, %H:%M")
+    DatumVrg = deVraag.vrg_DatVastlegging
+    Bericht = config.BEVESTIGINGSMAIL_ADVIESCONTACTVRAAG_BODY.format(Contact, DatumVrg, deVraag.vrg_Tekst)
+    print('bericht opgemaakt')
+    Onderwerp = 'Terugkoppeling op uw vraag aan Duurzaam Woerden op: ' + DatumVrg
+
+    Nummers = Contact.nummer_set.all()
+    ToEmail = None
+
+    for nummer in Nummers:
+        if nummer.nmb_Medium == 'E':
+            ToEmail = nummer.nmb_Number
+
+    if ToEmail is None:
+        print('Ontbrekend email adres')
+        messages.success(request, f'Het e-mail adres van het adviescontact ontbreek (mail niet verzonden)')
+        SndSuc = False
+
+    if SndSuc:
+        try:
+            email = EmailMessage(
+                Onderwerp,  # Subject
+                Bericht,  # Message
+                BccMail,  # From email
+                [ToEmail],  # To email
+                BccMails
+            )
+            email.send(fail_silently=False)
+        except:
+            SndSuc = False
+            messages.success(request, f'Er ging iets fout tijdens het verzenden van de bevestigingsmail naar Adviescontact: ' + str(Contact))
+
+    if SndSuc:
+        print('met success verzonden')
+        messages.success(request, f'Het bevestigins e-mail is met succes verzonden')
+
+        # If success update status vraag naar in behandeling
+        deVraag.vrg_StatusVraag = 'U'
+        deVraag.save()
+
+    return redirect(reverse("drzData:upd_adviescontact", kwargs={'pk': cnt_id}))

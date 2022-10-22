@@ -13,6 +13,9 @@
         <div>
         <div>
             <a href="{% url 'drzData:upd_adviescontact' contact.id %}">{{ contact.cnt_VoorNm }} {{ contact.cnt_AchterNm }}</a>
+            {% if Tag == 'AdvCntOpnVrg' %}
+
+            {% endif %}
             </div>
             <div style="padding-left: 26px;">
         {% if ShowCoachGsprLink == 'True' %}

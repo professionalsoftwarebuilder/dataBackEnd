@@ -413,6 +413,10 @@ class Woninggegevens(models.Model):
 
 class Vraag(models.Model):
     Contact = models.ForeignKey(AdviesContact, on_delete=models.CASCADE, blank=True, null=True)
+    #$# 010 add 3
+    vrg_Afhandelaren = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, verbose_name='Afhandelaren', help_text='Medewerkers die vraag behandelen', related_query_name='afhandelaren_related')
+    vrg_Exposanten = models.ManyToManyField(Exposant, blank=True, verbose_name='Exposanten', help_text='Aan deze vraag gekoppelde exposanten', related_query_name='exposanten_related')
+    vrg_DatVastlegging = models.DateTimeField('Tijdstip van notatie', blank=True, null=True)
     vrg_TypeVraag = models.CharField('Type vraag', max_length=1, choices=TYPEVRAAG_CHS, blank=True, null=True)
     vrg_OnderwerpVraag = models.CharField('Onderwerp vraag', max_length=3, choices=ONDERWERPVRAAG_CHS, blank=True, null=True)
     vrg_StatusVraag = models.CharField('Status vraag', max_length=1, choices=STATUSVRAAG_CHS, blank=True, null=True)

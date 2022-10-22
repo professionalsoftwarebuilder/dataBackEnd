@@ -7,6 +7,9 @@ from .models import Bezoekreden, WinkelBezoek, Exposant, \
     AdviesContact, Vraag, Contact, Woninggegevens, CoachGesprek, Nummer, Adres
 from django.forms import inlineformset_factory
 from .widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
+from django.conf import settings
+from django.contrib.auth import get_user_model
+
 
 TYPEEXPOSANT_CHS = (
     ('O', 'Bedrijf'),
@@ -129,9 +132,28 @@ class VraagForm(forms.ModelForm):
     # vrg_OnderwerpVraag = forms.CharField(label='Onderwerp vraag', max_length=3, choices=ONDERWERPVRAAG_CHS, blank=True, null=True)
     # vrg_StatusVraag = forms.CharField(label='Status vraag', max_length=1, choices=STATUSVRAAG_CHS, blank=True, null=True)
 
+    #$# 010 add4
+    vrg_DatVastlegging = forms.SplitDateTimeField(widget=AdminSplitDateTime, initial=datetime.today(), label='Tijdstip vastgelegd')
+
+    User = get_user_model()
+    vrg_Afhandelaren = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple(attrs={'style': 'list-style-type:none;'}),
+        # empty_label='Geen bezoekredenen in systeem aanwezig',
+        label='Afhandela(a)r(en)',
+    )
+    vrg_Exposanten = forms.ModelMultipleChoiceField(
+        queryset=Exposant.objects.all(),
+        widget=forms.CheckboxSelectMultiple(attrs={'style': 'list-style-type:none;'}),
+        # empty_label='Geen Exposanten in systeem aanwezig',
+        label='Exposant(en)',
+        help_text='Aan deze vraag gekoppelde exposanten'
+    )
+
     class Meta:
         model = Vraag
-        fields = ('vrg_Tekst', 'vrg_OnderwerpVraag', 'vrg_StatusVraag', 'vrg_TypeVraag')
+        #$# 010 chn 1
+        fields = ('vrg_DatVastlegging', 'vrg_Tekst', 'vrg_Afhandelaren', 'vrg_Exposanten', 'vrg_OnderwerpVraag', 'vrg_StatusVraag', 'vrg_TypeVraag')
 
 
 class WoninggegevensForm(forms.ModelForm):
