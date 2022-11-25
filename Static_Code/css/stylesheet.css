@@ -1,0 +1,92 @@
+body {
+	background-color:#ffffff;
+	color:#000000;
+    font-family: 'Poppins', sans-serif;
+	}
+
+* {
+	margin:0;
+	box-sizing:border-box;
+}
+	
+.dw_button {
+    color:#ffffff;
+    background-color:rgb(37,195,21);
+    border-radius:15px;
+    padding:10px;
+    cursor:pointer;
+}
+.dw_logo {
+    background-image:url(../images/LogoDuurzaamWoerden-32.png);
+    background-position:center;
+    background-repeat:no-repeat;
+    background-size:cover;
+    height:150px;
+    padding:25px;
+    width:150px;
+}
+
+.dw_head {
+ 	display:grid;
+	grid-template-columns:1fr 1fr;
+    padding:25px;
+}
+
+.dw_icon {
+    color:rgb(37,195,21);
+    font-size:50px;
+    padding:10px;
+}
+
+.dw_title {
+    font-family: 'Arvo', serif;
+    font-size:25px;
+    font-weight:bold;
+    padding:25px;
+    text-align:right;
+}
+
+.dw_blocks {
+    color:rgb(37,195,21);
+    color:#222222;
+ 	display:grid;
+	grid-template-columns:1fr 1fr 1fr;
+    grid-column-gap: 10px;
+    padding:5px;
+}
+
+.dw_block {
+    background-color:white;
+    border-color:rgb(37,195,21);
+    border-color:#888888;
+    border-radius:25px;
+    border-style:solid;
+    border-width:3px;
+/*    cursor:pointer;*/
+    font-family: 'Poppins', sans-serif;
+    font-size:25px;
+    font-weight:bold;
+    padding:10px;
+    text-align:center;
+}
+
+/*
+.dw_block:hover {
+    background-color:rgb(37,195,21);
+    color:#ffffff;
+}
+*/
+
+.remark {
+    font-size:20px;
+    font-weight:normal;
+    height:110px;
+}
+
+.sep {
+    color:#888888;
+    font-size:20px;
+    font-weight:bold;
+    padding-top:50px;
+    text-align: center;
+}
