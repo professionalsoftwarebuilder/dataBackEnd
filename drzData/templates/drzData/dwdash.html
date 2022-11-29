@@ -1,0 +1,100 @@
+    {% block title %}
+        Dashboard
+    {% endblock title %}
+
+    <div class="dw_head">
+        <div class="dw_logo"></div>
+        <div class="dw_title">Duurzaamheidswinkel Dashboard</div>
+    </div>
+
+    <div class="sep">Basis-functies:</div>
+
+    <div class="dw_blocks">
+    <div class="dw_block">
+        <div class="dw_icon"><i class="fa fa-store"></i><i class="fa-solid fa-warehouse"></i>
+        </div>Winkelbezoeken<br>
+        <div class="remark">Hier kun je eenvoudig en snel winkelbezoeken registreren</div>
+        <a href="{% url 'drzData:add_winkelbezoek' %}" >
+        <div class="dw_button">Winkel </div>
+            </a>
+    </div>
+
+    <div class="dw_block">
+        <div class="dw_icon"><i class="fa fa-comment-medical"></i></div>Openstaande vragen<br>
+        <div class="remark">Nog openstaande vragen kun je hier inzien, wijzigen en erop reageren.</div>
+        <a href="{% url 'drzData:lst_advcont_opnvraag' %}" >
+            <div class="dw_button">
+                Vraag
+            </div>
+        </a>
+    </div>
+
+    <div class="dw_block">
+        <div class="dw_icon"><i class="fa fa-house-user"></i></div>Winkelezoeker<br>
+        <div class="remark">Hier kun jij of de bezoeker zelf zijn gegevens en zijn vraag invoeren</div>
+        <a href="{% url 'drzData:add_adviescontact' %}" >
+            <div class="dw_button">
+                Advies
+            </div>
+        </a>
+    </div>
+    </div>
+
+    <div class="dw_blocks">
+    <div class="dw_block">
+        <div class="dw_icon"><i class="fa fa-briefcase"></i></div>Coachgesprek<br>
+        <div class="remark">Op gesprek geweest? Hier kun je als energiecoach gegevens invoeren</div>
+        <a href="{% url 'drzData:add_coachgesprek' %}" >
+            <div class="dw_button">
+                Coach
+            </div>
+        </a>
+    </div>
+
+    <div class="dw_block">
+        <div class="dw_icon"><i class="fa fa-question-circle"></i></div>Hulp nodig?<br>
+        <div class="remark">Lees de handleiding of stel een vraag over dit dashboard.</div>
+        <div class="dw_button">Help</div>
+    </div>
+    </div>
+
+    <div class="sep">Geavanceerde functies: </div>
+
+    <div class="dw_blocks">
+
+        <div class="dw_block">
+            <div class="dw_icon">
+                <i class="fa fa-key"></i>
+            </div>Beheer
+            <br>
+            {% if not user.is_authenticated %}
+            <div class="remark">
+                Hier kun je inloggen als beheerder in het dashboard
+            </div>
+            <a href="{% url 'admin:index' %}" >
+                <div class="dw_button">
+                    Inloggen
+                </div>
+            </a>
+            {% else %}
+            <div class="remark">
+                Je bent ingelogd als<br>
+                <b>{{ user.get_username }}</b><br>
+                Hier kun je uitloggen
+            </div>
+            <a href="{% url 'admin:logout' %}" >
+                <div class="dw_button">
+                    Uitloggen
+                </div>
+            </a>
+            {% endif %}
+        </div>
+
+
+
+        <div class="dw_block">
+            <div class="dw_icon"><i class="fa fa-file-download"></i></div>Gegevens<br>
+            <div class="remark">Bekijk, download of print gegevens die in het dashboard zitten.</div>
+            <div class="dw_button">Uitvoeren</div>
+        </div>
+    </div>

@@ -1,6 +1,9 @@
 {% load static %}
 {% load i18n admin_modify l10n %}
 
+<!--Let op, deze wordt alleen voor de landingpagian (eig de dashboard) gebruikt-->
+<!--Hoeft eig niet alle script te hebben voor admin pagina's enz.-->
+
 <!doctype html>
 <html lang="nl">
   <head>
@@ -41,9 +44,12 @@
   </head>
   <body>
     <div id="Wrapper" class="container">
-        {% include 'navbar-land.html' %}
+
+
         {% block content %}
+
         {% endblock content %}
+
     </div>
 
    <!-- Optional JavaScript -->

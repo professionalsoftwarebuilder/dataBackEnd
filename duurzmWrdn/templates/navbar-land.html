@@ -1,0 +1,32 @@
+{% load static %}
+
+<style>
+  ul > li {
+    list-style-type: none;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" >
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'drzData:index' %}" >
+      <img src="{% static 'images/LogoDuurzaamWoerden-32.png' %}" />
+    </a>
+
+    <!-- Let op hier wordt bootstrap 4 gebruikt in bootstrap 5 data-bs-target ipv data-target -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarTogglerDemo02"
+            aria-controls="navbarTogglerDemo02"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" >
+        <li class="nav-item" style="list-style-type: none;">
+          <a class="nav-link active" aria-current="page" href="{% url 'drzData:index' %}" >Dashboard</a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
