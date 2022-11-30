@@ -206,6 +206,12 @@ class add_adviescontact(CreateView):
             print('vraag formset is valid')
         else:
             print('vraag formset is invalid')
+
+        if adres_formset.is_valid():
+            print('adres formset is valid')
+        else:
+            print('adres formset is invalid')
+
         #args = (vraag_formset, woninggeg_formset)
         #if form.is_valid() and vraag_formset.is_valid() and woninggeg_formset.is_valid():
         #if form.is_valid() and vraag_formset.is_valid():
