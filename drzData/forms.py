@@ -79,10 +79,10 @@ class ExposantForm(forms.ModelForm):
 
 
 class AdresForm(forms.ModelForm):
-    adr_HuisNr = forms.CharField(widget=wdgSmall, label='Huisnummer', required=False)
-    adr_HuisNrToev = forms.CharField(widget=theWidget, label='Toevoeging', required=False)
+    adr_HuisNr = forms.CharField(widget=wdgSmall, label='Huisnummer', required=False, max_length=10)
+    adr_HuisNrToev = forms.CharField(widget=theWidget, label='Toevoeging', required=False, max_length=10)
     # adr_Land = CountryField(multiple=False)
-    adr_PostCd = forms.CharField(widget=theWidget, label='Postcode', required=False)
+    adr_PostCd = forms.CharField(widget=theWidget, label='Postcode', required=False, max_length=15)
     adr_Notities = forms.CharField(widget=wdgTextA, label='Notities', required=False)
 
     class Meta:
