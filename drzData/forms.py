@@ -108,12 +108,17 @@ class NummerForm(forms.ModelForm):
 
 
 class WinkelBezoekForm(forms.ModelForm):
-    wbz_TijdStip = forms.SplitDateTimeField(widget=AdminSplitDateTime, initial=datetime.today(), label='Tijdstip van bezoek')
+    wbz_TijdStip = forms.SplitDateTimeField(widget=AdminSplitDateTime,
+                                            initial=datetime.today(),
+                                            required=False,
+                                            label='Tijdstip van bezoek')
     wbz_Bezoeken = forms.ModelMultipleChoiceField(
         queryset=Bezoekreden.objects.all(),
         widget=forms.CheckboxSelectMultiple(attrs={'style': 'list-style-type:none;'}),
         # empty_label='Geen bezoekredenen in systeem aanwezig',
         label='Bezoekreden(en)',
+        required=True,
+        help_text='Voor opslaan een of meerdere bezoekredenen kiezen, anders krijgt u een foutmelding',
     )
     wbz_Notities = forms.CharField(widget=wdgTextA, required=False, label='Notities')
 
