@@ -33,6 +33,7 @@ class AdviesContactForm(forms.ModelForm):
     cnt_TussenVgsl = forms.CharField(widget=theWidget, label='Tussenvoegsels', required=False)
     cnt_VoorLtrs = forms.CharField(widget=theWidget, label='Voorletters', required=False)
     cnt_Notities = forms.CharField(widget=wdgTextA, label='Notities', required=False)
+    cnt_DatVastlegging = forms.SplitDateTimeField(widget=AdminSplitDateTime, required=False, initial=datetime.today(), label='Tijdstip van notatie')
 
     class Meta:
         model = AdviesContact
@@ -133,7 +134,7 @@ class VraagForm(forms.ModelForm):
     # vrg_StatusVraag = forms.CharField(label='Status vraag', max_length=1, choices=STATUSVRAAG_CHS, blank=True, null=True)
 
     #$# 010 add4
-    vrg_DatVastlegging = forms.SplitDateTimeField(widget=AdminSplitDateTime, initial=datetime.today(), label='Tijdstip vastgelegd')
+    vrg_DatVastlegging = forms.SplitDateTimeField(widget=AdminSplitDateTime, required=False, initial=datetime.today(), label='Tijdstip vastgelegd')
 
     User = get_user_model()
     vrg_Afhandelaren = forms.ModelMultipleChoiceField(
@@ -141,13 +142,15 @@ class VraagForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple(attrs={'style': 'list-style-type:none;'}),
         # empty_label='Geen bezoekredenen in systeem aanwezig',
         label='Afhandela(a)r(en)',
+        required=False
     )
     vrg_Exposanten = forms.ModelMultipleChoiceField(
         queryset=Exposant.objects.all(),
         widget=forms.CheckboxSelectMultiple(attrs={'style': 'list-style-type:none;'}),
         # empty_label='Geen Exposanten in systeem aanwezig',
         label='Exposant(en)',
-        help_text='Aan deze vraag gekoppelde exposanten'
+        help_text='Aan deze vraag gekoppelde exposanten',
+        required=False
     )
 
     class Meta:
