@@ -51,7 +51,9 @@ body {
     color:#222222;
  	display:grid;
 	grid-template-columns:1fr 1fr 1fr;
+	//grid-template-rows: 500px 500px;
     grid-column-gap: 10px;
+    grid-row-gap: 10px;
     padding:5px;
 }
 
@@ -70,6 +72,14 @@ body {
     text-align:center;
 }
 
+/*Hier tekst in opmerking gedeelte aanpassen*/
+.opmrk  {
+    text-align:left;
+       font-size:20px;
+    font-weight:normal;
+
+}
+
 /*
 .dw_block:hover {
     background-color:rgb(37,195,21);
@@ -77,10 +87,9 @@ body {
 }
 */
 
+/*Hier de hoogte van het opmerking gedeelte aanpassen*/
 .remark {
-    font-size:20px;
-    font-weight:normal;
-    height:110px;
+    height:150px;
 }
 
 .sep {

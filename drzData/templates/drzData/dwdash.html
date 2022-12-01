@@ -13,7 +13,19 @@
     <div class="dw_block">
         <div class="dw_icon"><i class="fa fa-store"></i><i class="fa-solid fa-warehouse"></i>
         </div>Winkelbezoeken<br>
-        <div class="remark">Hier kun je eenvoudig en snel winkelbezoeken registreren</div>
+        <div class="remark">
+            <ul class="opmrk" >
+                <li>
+                    Winkelbezoeken registreren
+                </li>
+                <li>
+                    Voor winkelmedewerkers
+                </li>
+                <li>
+                    Dit scherm open laten staan op een centrale computer
+                </li>
+            </ul>
+        </div>
         <a href="{% url 'drzData:add_winkelbezoek' %}" >
         <div class="dw_button">Winkel </div>
             </a>
@@ -21,7 +33,19 @@
 
     <div class="dw_block">
         <div class="dw_icon"><i class="fa fa-comment-medical"></i></div>Openstaande vragen<br>
-        <div class="remark">Nog openstaande vragen kun je hier inzien, wijzigen en erop reageren.</div>
+        <div class="remark">
+            <ul class="opmrk" >
+                <li>
+                    Nog openstaande vragen inzien en erop reageren
+                </li>
+                <li>
+                    Voor administrateurs
+                </li>
+                <li>
+                    Openen op persoonlijke pc of laptop
+                </li>
+            </ul>
+        </div>
         <a href="{% url 'drzData:lst_advcont_opnvraag' %}" >
             <div class="dw_button">
                 Vraag
@@ -30,20 +54,66 @@
     </div>
 
     <div class="dw_block">
-        <div class="dw_icon"><i class="fa fa-house-user"></i></div>Winkelezoeker<br>
-        <div class="remark">Hier kun jij of de bezoeker zelf zijn gegevens en zijn vraag invoeren</div>
+        <div class="dw_icon"><i class="fa fa-house-user"></i></div>Bezoekergegevens<br>
+        <div class="remark">
+
+            <ul class="opmrk" >
+                <li>
+                    Gegevens en vragen(en) van een winkelbezoeker invoeren
+                </li>
+                <li>
+                    Voor winkelmedewerkers
+                </li>
+                <li>
+                    Openen op persoonlijke pc of laptop
+                </li>
+            </ul>
+        </div>
         <a href="{% url 'drzData:add_adviescontact' %}" >
             <div class="dw_button">
                 Advies
             </div>
         </a>
     </div>
+
+    <div class="dw_block">
+        <div class="dw_icon"><i class="fa fa-house-user"></i></div>Bezoekergegevens<br>
+        <div class="remark">
+
+            <ul class="opmrk" >
+                <li>
+                    Gegevens en vragen(en) door een winkelbezoeker zelf laten invoeren
+                </li>
+                <li>
+                    Voor winkelbezokers
+                </li>
+                <li>
+                    Dit scherm open laten staan op een centrale computer
+                </li>
+            </ul>
+        </div>
+        <a href="{% url 'drzData:add_adviescontact' %}" >
+            <div class="dw_button">
+                Advies
+            </div>
+        </a>
     </div>
 
-    <div class="dw_blocks">
     <div class="dw_block">
         <div class="dw_icon"><i class="fa fa-briefcase"></i></div>Coachgesprek<br>
-        <div class="remark">Op gesprek geweest? Hier kun je als energiecoach gegevens invoeren</div>
+        <div class="remark">
+           <ul class="opmrk" >
+                <li>
+                    Coachgesprekken inplannen, registreren, coachingstraject bijhouden
+                </li>
+                <li>
+                    Voor administrateurs en energiecoaches
+                </li>
+                <li>
+                    Openen op persoonlijke pc of laptop
+                </li>
+            </ul>
+        </div>
         <a href="{% url 'drzData:add_coachgesprek' %}" >
             <div class="dw_button">
                 Coach
