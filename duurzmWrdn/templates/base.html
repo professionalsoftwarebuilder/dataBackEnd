@@ -32,6 +32,9 @@
     <link rel="styleSheet" href="{% static 'css/stylesheet.css' %}" type="text/css" media="screen">
     <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 
+    {% block css_page %}
+    <!--css specific for page-->
+    {% endblock css_page %}
 
     <title>
         {% block title %}
@@ -64,6 +67,11 @@
 
     {% block adminscript %}
     {% endblock adminscript %}
+
+    {% block js_page %}
+    <!--css specific for page-->
+    {% endblock js_page %}
+
 
   </body>
 </html>

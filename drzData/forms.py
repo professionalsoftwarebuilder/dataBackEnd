@@ -18,6 +18,7 @@ TYPEEXPOSANT_CHS = (
 )
 
 theWidget = forms.TextInput(attrs={'size': '10'})
+wdgRequired = forms.TextInput(attrs={'size': '10', 'class': 'required'})
 wdgSmall = forms.TextInput(attrs={'size': '6'})
 wdgTextA = forms.Textarea(attrs={'rows': 2, 'cols': 60})
 notFld = forms.CharField(widget=wdgTextA, label='Notities', required=False)
@@ -30,10 +31,15 @@ class ContactForm(forms.ModelForm):
 
 
 class AdviesContactForm(forms.ModelForm):
+    #required_css_class = 'required'
+
+    #cnt_VoorNm = forms.CharField(widget=wdgRequired, label='Voornaam', required=True, max_length=45)
     cnt_TussenVgsl = forms.CharField(widget=theWidget, label='Tussenvoegsels', required=False)
     cnt_VoorLtrs = forms.CharField(widget=theWidget, label='Voorletters', required=False)
     cnt_Notities = forms.CharField(widget=wdgTextA, label='Notities', required=False)
     cnt_DatVastlegging = forms.SplitDateTimeField(widget=AdminSplitDateTime, required=False, initial=datetime.today(), label='Tijdstip van notatie')
+
+
 
     class Meta:
         model = AdviesContact
@@ -52,6 +58,7 @@ class AdviesContactForm(forms.ModelForm):
 
 
 class AdviesContactFrontForm(forms.ModelForm):
+    required_css_class = 'required'
     cnt_TussenVgsl = forms.CharField(widget=theWidget, label='Tussenvoegsels', required=False)
     cnt_VoorLtrs = forms.CharField(widget=theWidget, label='Voorletters', required=False)
     cnt_Notities = forms.CharField(widget=wdgTextA, label='Notities', required=False)
@@ -73,6 +80,7 @@ class AdviesContactFrontForm(forms.ModelForm):
 
 
 class ExposantForm(forms.ModelForm):
+    required_css_class = 'required'
     grp_GroupNm = forms.CharField(label='Exposant (naam)', max_length=45)
     grp_Notities = notFld
     grp_Type = forms.ChoiceField(label='Type Exposant', choices=TYPEEXPOSANT_CHS)
@@ -109,6 +117,8 @@ class NummerForm(forms.ModelForm):
 
 
 class WinkelBezoekForm(forms.ModelForm):
+    required_css_class = 'required'
+
     wbz_TijdStip = forms.SplitDateTimeField(widget=AdminSplitDateTime,
                                             initial=datetime.today(),
                                             required=False,
