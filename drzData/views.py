@@ -593,7 +593,7 @@ def mail_vraag(request, vrg_id, cnt_id):
     DatumVrg = deVraag.vrg_DatVastlegging
     Bericht = config.BEVESTIGINGSMAIL_ADVIESCONTACTVRAAG_BODY.format(Contact, DatumVrg, deVraag.vrg_Tekst)
     print('bericht opgemaakt')
-    Onderwerp = 'Terugkoppeling op uw vraag aan Duurzaam Woerden op: ' + DatumVrg
+    Onderwerp = 'Terugkoppeling op uw vraag aan Duurzaam Woerden op: ' + DatumVrg.strftime("%m-%d-%Y %H:%M:%S")
 
     Nummers = Contact.nummer_set.all()
     ToEmail = None

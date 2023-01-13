@@ -1,3 +1,9 @@
+//  Code hieronder is gebaseerd op jQuery en plaats clientside
+//  validatie in lijst met id errorMessages die zicht weer bovenin
+//  de pagina bevind en zichtbaar is in alle tabs, hiermee is het probleem opgelost
+//  dat wanneer de gebruiker op een tab is en de pagina wil niet submitten vanwege velden op een
+//  ander tab, dat de gebruiker niet weet wat er aan de hand is
+
     //alert('010');
     var createAllErrors = function() {
         //alert('createAllErrors');
