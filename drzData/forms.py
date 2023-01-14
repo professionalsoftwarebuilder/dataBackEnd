@@ -59,23 +59,39 @@ class AdviesContactForm(forms.ModelForm):
 
 class AdviesContactFrontForm(forms.ModelForm):
     required_css_class = 'required'
-    cnt_TussenVgsl = forms.CharField(widget=theWidget, label='Tussenvoegsels', required=False)
-    cnt_VoorLtrs = forms.CharField(widget=theWidget, label='Voorletters', required=False)
+    cnt_VoorNm = forms.CharField(label='Voornaam (of initialen)', required=True, )   #help_text='Voornaam of initialen'
+    cnt_AchterNm = forms.CharField(label='Achternaam (incl. tussenvoegsel)', required=True, )    #help_text='inclusief tussenvoegsel'
+    #cnt_TussenVgsl = forms.CharField(widget=theWidget, label='Tussenvoegsel(s)', required=False)
+    #cnt_VoorLtrs = forms.CharField(widget=theWidget, label='Voorletters', required=False)
     cnt_Notities = forms.CharField(widget=wdgTextA, label='Notities', required=False)
     cnt_DatVastlegging = forms.SplitDateTimeField(widget=AdminSplitDateTime, initial=datetime.today(), label='Tijdstip vastgelegd')
 
     class Meta:
         model = AdviesContact
-        fields = ('cnt_Vastlegger',
-                  'cnt_DatVastlegging',
+        # Fieldsets schijnt er niet te zijn in django native
+        # fieldsets = (
+        #     (None, {
+        #         'fields': ['cnt_VoorNm', 'cnt_VoorLtrs'],
+        #     }),
+        # )
+        fields = ('cnt_Vastlegger',             # 01
+                  'cnt_DatVastlegging',         # 02
                   'cnt_VoorNm',
+                  # 'cnt_VoorLtrs',
+                  # 'cnt_TussenVgsl',
                   'cnt_AchterNm',
-                  'cnt_TussenVgsl',
-                  'cnt_VoorLtrs',
+
+                  'cnt_Telefoon',
+                  'cnt_EMail',
+
+                  'cnt_Straat',
+                  'cnt_HuisNr',
+                  'cnt_HuisNrToev',
+                  'cnt_PostCd',
+                  'cnt_Plaats',
+                  'cnt_type',                   # 13
+
                   'cnt_Notities',
-                  'cnt_NieuwsBrief',
-                  'cnt_Acties',
-                  'cnt_Activiteit',
                   )
 
 

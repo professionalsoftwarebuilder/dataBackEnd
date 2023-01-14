@@ -342,6 +342,18 @@ class Contact(models.Model):
     cnt_Notities = models.TextField('Notities', blank=True, null=True)
     cnt_Type = models.CharField('Type contact', max_length=1, choices=CNTHOEDANIGHEID_CHS, blank=True, null=True, default='W')
 
+    # Dit zijn "hoofd adresgegevens", adres en nummer zijn er ook nog als detail tabellen
+    # (dus als men nog meer adressen en nummers wil vastleggen)
+    cnt_Straat = models.CharField('Straat', max_length=100, blank=True, null=True)
+    cnt_HuisNr = models.CharField('Huisnummer', max_length=10, blank=True, null=True)
+    cnt_HuisNrToev = models.CharField('Toevoeging', max_length=10, blank=True, null=True)
+    #adr_Land = CountryField(multiple=False)
+    cnt_PostCd = models.CharField('Postcode', max_length=15, blank=True, null=True)
+    cnt_Plaats = models.CharField('Plaats', max_length=85, blank=True, null=True)
+    cnt_Telefoon = models.CharField('Telefoon', max_length=85, blank=True, null=True)
+    cnt_EMail = models.CharField('E-mail', max_length=85, blank=True, null=True)
+    cnt_type = models.CharField('Type adres', max_length=1, choices=ADDRESS_CHOICES, blank=True, null=True, default='W')
+
     def __str__(self):
         return CheckForNone(self.cnt_VoorNm) + CheckForNone(self.cnt_TussenVgsl) + CheckForNone(self.cnt_AchterNm)
 
