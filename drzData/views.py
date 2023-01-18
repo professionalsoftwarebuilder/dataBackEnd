@@ -317,10 +317,17 @@ class upd_adviescontact(UpdateView):
         form = self.get_form(form_class)
         form.instance = self.object
 
+        # Vraag tekst ophalen
+        form_data = request.POST.dict()
+        vraagtekst = form_data.get('vraagtekst', None)
+
         vraag_formset = VraagInlineFormset(self.request.POST, instance=self.object)
         woninggeg_formset = WoninggegevensInlineFormset(self.request.POST, instance=self.object)
         nummer_formset = NummerInlineFormset(self.request.POST, instance=self.object)
         adres_formset = AdresInlineFormset(self.request.POST, instance=self.object)
+
+
+
 
         if vraag_formset.is_valid():
             print('vraag formset is valid')
@@ -349,6 +356,8 @@ class upd_adviescontact(UpdateView):
         adressen = adres_formset.save()
 
         print('bericht opgemaakt')
+
+
 
 
     # for vraag in vragen:
