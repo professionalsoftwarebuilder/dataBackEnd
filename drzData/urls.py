@@ -15,6 +15,11 @@ urlpatterns = [
     path('lst_adviescontact/', views.lst_adviescontact.as_view(), name='lst_adviescontact'),
     path('lst_advcont_opnvraag/', views.lst_advcont_opnvraag.as_view(), name='lst_advcont_opnvraag'),
     path('lst_advcont_coachgespr/', views.lst_advcont_coachgespr.as_view(), name='lst_advcont_coachgespr'),
+
+    # Klant "selfservice scherm"
+    path('add_klantselfserv/', views.add_klantselfserv.as_view(), name='add_klantselfserv'),
+    path('upd_klantselfserv/<int:pk>', views.upd_klantselfserv.as_view(), name='upd_klantselfserv'),
+
     path('savewnkbzandnwcont/<int:wnkbz>', views.add_adviescontact.as_view(), name='savewnkbzandnwcont'),
     path('prnt_lst_advcont/<str:tag>', views.prnt_lst_advcont, name='prnt_lst_advcont'),
     path('snd_bevestcoachgespr/<int:pk>', views.snd_bevestcoachgespr, name='snd_bevestcoachgespr'),

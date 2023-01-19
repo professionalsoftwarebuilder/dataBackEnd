@@ -338,3 +338,46 @@ AdresInlineFormset = inlineformset_factory(
     form=AdresForm,
     extra=1,
 )
+
+
+#------------------------------------
+
+class KlantSelfServFrontForm(forms.ModelForm):
+    required_css_class = 'required'
+    cnt_VoorNm = forms.CharField(label='Voornaam (of initialen)', required=True, )   #help_text='Voornaam of initialen'
+    cnt_AchterNm = forms.CharField(label='Achternaam (incl. tussenvoegsel)', required=True, )    #help_text='inclusief tussenvoegsel'
+    #cnt_TussenVgsl = forms.CharField(widget=theWidget, label='Tussenvoegsel(s)', required=False)
+    #cnt_VoorLtrs = forms.CharField(widget=theWidget, label='Voorletters', required=False)
+    cnt_Notities = forms.CharField(widget=wdgTextA, label='Notities', required=False)
+    #cnt_DatVastlegging = forms.SplitDateTimeField(widget=AdminSplitDateTime, initial=datetime.today(), label='Tijdstip vastgelegd')
+    # Extra veld die niet in model zit (experiment)
+    cnt_VraagTekst = forms.CharField(widget=wdgTextB, label='Vraagtekst', required=False)
+
+    class Meta:
+        model = AdviesContact
+        # Fieldsets schijnt er niet te zijn in django native
+        # fieldsets = (
+        #     (None, {
+        #         'fields': ['cnt_VoorNm', 'cnt_VoorLtrs'],
+        #     }),
+        # )
+        fields = ('cnt_VoorNm',
+                  # 'cnt_VoorLtrs',
+                  # 'cnt_TussenVgsl',
+                  'cnt_AchterNm',
+
+                  'cnt_Telefoon',
+                  'cnt_EMail',
+
+                  'cnt_Straat',
+                  'cnt_HuisNr',
+                  'cnt_HuisNrToev',
+                  'cnt_PostCd',
+                  'cnt_Plaats',
+                  'cnt_type',                   # 13
+
+                  'cnt_Notities',
+                  'cnt_VraagTekst',
+                  )
+
+

@@ -1,0 +1,184 @@
+{% extends 'baseadmin.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block css_page %}
+    <!--css specific for page-->
+    <link rel="styleSheet" href="{% static 'css/tabbedpages.css' %}" type="text/css" media="screen">
+{% endblock css_page %}
+
+{% block content %}
+
+<!-- Tab links -->
+
+    <div class="cktab">
+        <span style="padding: 4px 16px">
+            Klanten "self service" scherm {% if object %}aanpassen{% else %}nieuw invoeren{% endif %}
+        </span>
+    </div>
+
+
+<form action="" method="post">
+    {% csrf_token %}
+
+    <div class="cktab">
+<!--      <a href="{% url 'drzData:add_klantselfserv' %}" ><button type="button" class="" >Nieuw</button></a>-->
+      <button class="" >Opslaan/Reset</button>
+    </div>
+
+
+    <!--Hier errormessages die op alle tabs gelezen moeten kunnen worden    -->
+    <div class="cktab">
+        <span style="padding: 4px 16px">Meldingen:&nbsp;</span><ul class="errorMessages showinline" ></ul>
+       {% for field in form.visible_fields %}
+              {% if field.errors %}
+                <ul>
+                  {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+        {% endfor %}
+        {{ form.errors }}
+
+
+    </div>
+
+
+<!-- Tab content Adviescontact-->
+
+     <table class="mt-8">
+
+    {{ form.as_table }}
+    </table>
+
+
+<!--      {% for field in form|slice:":3" %}-->
+<!--        {% endfor %}-->
+
+<!--    <button>Opslaan</button>-->
+
+<div id="Paris" class="tabcontent">
+  <h2>Woninggegevens bij dit Adviescontact</h2>
+<!--               {{ woninggeg_formset.management_form }}-->
+                {{ woninggeg_formset|crispy }}
+
+<!--                {% for form in woninggeg_formset %}-->
+<!--                <div class="d-flex py-1 inline {{ product_meta_formset.prefix }}">-->
+<!--                    <div>{{form.wng_TypeWoning.label}}: {{ form.wng_TypeWoning }}</div>-->
+<!--                    <div>{{form.wng_Bouwjaar.label}}: {{ form.wng_Bouwjaar }}</div>-->
+<!--                    <div>{{form.wng_Bewoning.label}}: {{ form.wng_Bewoning }}</div>-->
+<!--&lt;!&ndash;                    <div class="ml-4">{{form.value.label}}: {{ form.value }}</div>&ndash;&gt;-->
+<!--                    {% if woninggeg_formset.can_delete %}-->
+<!--                        <div class="ml-4">{{ form.DELETE }} {{ form.DELETE.label }}</div>-->
+<!--                    {% endif %}-->
+<!--                </div>-->
+<!--                {% endfor %}-->
+</div>
+<!--  </form>-->
+
+<div id="Tokyo" class="tabcontent">
+  <h2>Vraag / vragen bij dit Adviescontact</h2>
+
+
+<!--    #$# 010 replace   -->
+
+<!--<form action="" method="post">-->
+<!--    {% csrf_token %}-->
+               {{ vraag_formset.management_form }}
+
+
+                {% for vrgform in vraag_formset.forms %}
+                <div class='table'>
+                    {% if vrgform.instance.id %}
+                        <a href="{% url 'drzData:mail_vraag' vrgform.instance.id form.instance.id  %}" class="btn btn-info" >Stuur bevestigings e-mail naar contact</a>
+                        <div class="cktab">
+                             {% if messages %}
+                               {% for message in messages %}
+                <!--                    <div>-->
+                                    {{message}}
+                <!--                    </div>-->
+                               {% endfor %}
+                            {% endif %}
+                        </div>
+
+
+                    {% endif %}
+
+                <table class='no_error'>
+                    {{ vrgform.as_table }}
+                </table>
+                </div>
+                {% endfor %}
+
+
+
+
+
+<!--                {% for form in vraag_formset %}-->
+<!--                <div class="d-flex py-1 inline {{ product_meta_formset.prefix }}">-->
+<!--                    <div>{{form.vrg_Tekst.label}}: {{ form.vrg_Tekst }}</div>-->
+<!--&lt;!&ndash;                    <div class="ml-4">{{form.value.label}}: {{ form.value }}</div>&ndash;&gt;-->
+<!--                    {% if vraag_formset.can_delete %}-->
+<!--                        <div class="ml-4">{{ form.DELETE }} {{ form.DELETE.label }}</div>-->
+<!--                    {% endif %}-->
+<!--                </div>-->
+<!--                {% endfor %}-->
+
+</div>
+
+<div id="Oss" class="tabcontent">
+  <h2>Nummer(s) / e-mail enz.</h2>
+                {{ nummer_formset|crispy }}
+
+  <h2>Adressen (woon adres, post adres, verblijf adres, enz)</h2>
+            {{ adres_formset|crispy }}
+
+</div>
+
+<!--<div id="Berghem" class="tabcontent">-->
+<!--</div>-->
+
+</form>
+
+
+
+
+
+
+
+
+<script>
+function openCity(evt, cityName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
+
+<script>
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+
+{% endblock %}
+
+{% block js_page %}
+    <!--js specific for page-->
+    <script type="text/javascript" src="{% static 'js/tabbedpages.js' %}"></script>
+{% endblock js_page %}

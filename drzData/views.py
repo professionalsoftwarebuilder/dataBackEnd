@@ -10,7 +10,7 @@ from model_utils.models import now
 from .models import WinkelBezoek
 from .forms import WinkelBezoekForm, AdviesContactFrontForm, VraagInlineFormset, \
     WoninggegevensInlineFormset, CoachgesprekForm, AdviesContactListForm, \
-    AdresInlineFormset, NummerInlineFormset
+    AdresInlineFormset, NummerInlineFormset, KlantSelfServFrontForm
 
 from .models import *
 from django.shortcuts import redirect
@@ -23,6 +23,10 @@ from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 from django.core.mail import EmailMessage
 from datetime import datetime
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 def index(request):
     context = {}
@@ -639,3 +643,267 @@ def mail_vraag(request, vrg_id, cnt_id):
         deVraag.save()
 
     return redirect(reverse("drzData:upd_adviescontact", kwargs={'pk': cnt_id}))
+
+
+#---------------------------------------
+
+
+class add_klantselfserv(CreateView):
+    model = AdviesContact
+    form_class = KlantSelfServFrontForm
+    template_name = 'drzData/add_klantselfserv.html'
+    #success_url = reverse_lazy('drzData:add_adviescontact')
+
+    # def get_object(self, queryset=None):
+    #     if 'pk' in self.kwargs:
+    #         pk = self.kwargs['pk']
+    #         obj = self.model.objects.get(id=pk)
+    #     else:
+    #         obj = None
+    #
+    #     return obj
+
+    def get_context_data(self, **kwargs):
+        context = super(add_klantselfserv, self).get_context_data(**kwargs)
+        extraContext = {'vraag_formset': VraagInlineFormset(),
+                        'woninggeg_formset': WoninggegevensInlineFormset(),
+                        'nummer_formset': NummerInlineFormset(),
+                        'adres_formset': AdresInlineFormset(),
+                        }
+        context.update(extraContext)
+        return context
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     extraContext = {'score': bezoeken.count(), 'redenen': deLijst}
+    #     context.update(extraContext)
+    #     return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        vraag_formset = VraagInlineFormset(self.request.POST)
+        woninggeg_formset = WoninggegevensInlineFormset(self.request.POST)
+        nummer_formset = NummerInlineFormset(self.request.POST)
+        adres_formset = AdresInlineFormset(self.request.POST)
+
+        if vraag_formset.is_valid():
+            print('vraag formset is valid')
+        else:
+            print('vraag formset is invalid')
+
+        if adres_formset.is_valid():
+            print('adres formset is valid')
+        else:
+            print('adres formset is invalid')
+
+        #args = (vraag_formset, woninggeg_formset)
+        #if form.is_valid() and vraag_formset.is_valid() and woninggeg_formset.is_valid():
+        #if form.is_valid() and vraag_formset.is_valid():
+        #if form.is_valid() and woninggeg_formset.is_valid():
+
+        if form.is_valid():
+            VraagTekst = form.cleaned_data['cnt_VraagTekst']
+            print(VraagTekst)
+
+
+        if form.is_valid() and woninggeg_formset.is_valid() and \
+                    vraag_formset.is_valid() and nummer_formset.is_valid() and adres_formset.is_valid():
+            return self.form_valid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset, VraagTekst)
+            #return self.form_valid(form)
+        else:
+            return self.form_invalid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
+
+    def form_valid(self, form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset, VraagTekst):
+    #def form_valid(self, form):
+        self.object = form.save(commit=False)
+        #ctx = self.get_context_data()
+        # Deze view kan ook vanuit winkelbezoek zijn aangeroepen!!!
+        # In dat geval wordt hier de winkelbezoek gekoppeld
+        if 'wnkbz' in self.kwargs:
+            theId = self.kwargs.get('wnkbz')
+            print('the id is: ' + str(theId))
+            wnkbz = WinkelBezoek.objects.get(id=theId)
+            #self.object.save()
+            self.object.winkelbezoek_set.add(wnkbz, bulk=False)
+            print('winkelbezoek gekoppeld')
+        # else:
+        #     self.object.save()
+
+        #self.object.save()
+        # Vraag aanmaken en toevoegen
+        DeVraag = Vraag(vrg_Tekst=VraagTekst, vrg_StatusVraag='O', Contact=self.object)
+
+        # Vastlegger op user duurzaam zetten
+        VastLegger = User.objects.get(username='duurzaam')
+
+        self.object.cnt_Vastlegger = VastLegger
+        self.object.save()
+        print('Vastlegger duurzaam gesaved')
+
+        DeVraag.save()
+
+        form.save_m2m()
+
+        # context = self.get_context_data()
+        # vraag_formset = context['vraag_formset']
+        # woninggeg_formset = context['woninggeg_formset']
+        vragen = vraag_formset.save(commit=False)
+        woninggeg = woninggeg_formset.save(commit=False)
+        nummers = nummer_formset.save(commit=False)
+        adressen = adres_formset.save(commit=False)
+
+        for vraag in vragen:
+            vraag.adviescontact = self.object
+            self.object.vraag_set.add(vraag, bulk=False)
+
+        for wgeg in woninggeg:
+            wgeg.adviescontact = self.object
+            self.object.woninggegevens_set.add(wgeg, bulk=False)
+
+        for nummer in nummers:
+            nummer.adviescontact = self.object
+            self.object.nummer_set.add(nummer, bulk=False)
+
+        for adres in adressen:
+            adres.adviescontact = self.object
+            self.object.adres_set.add(adres, bulk=False)
+
+        #return redirect(reverse("drzData:upd_klantselfserv", kwargs={'pk': self.object.id}))
+
+        return redirect(reverse("drzData:add_klantselfserv"))
+
+
+    def form_invalid(self, form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset):
+        # context = self.get_context_data()
+        # vraag_formset = context['vraag_formset']
+        # woninggeg_formset = context['woninggeg_formset']
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  woninggeg_formset=woninggeg_formset,
+                                  vraag_formset=vraag_formset))
+
+
+
+
+
+class upd_klantselfserv(UpdateView):
+    model = AdviesContact
+    form_class = KlantSelfServFrontForm
+    template_name = 'drzData/add_klantselfserv.html'
+    #success_url = reverse_lazy('drzData:add_adviescontact')
+
+    # def get_object(self, queryset=None):
+    #     if 'pk' in self.kwargs:
+    #         pk = self.kwargs['pk']
+    #         obj = self.model.objects.get(id=pk)
+    #     else:
+    #         obj = None
+    #
+    #     return obj
+
+    def get_context_data(self, **kwargs):
+        context = super(upd_klantselfserv, self).get_context_data(**kwargs)
+
+        extraContext = {
+            'vraag_formset': VraagInlineFormset(instance=self.object),
+            'woninggeg_formset': WoninggegevensInlineFormset(instance=self.object),
+            'nummer_formset': NummerInlineFormset(instance=self.object),
+            'adres_formset': AdresInlineFormset(instance=self.object),
+
+        }
+
+        context.update(extraContext)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        print('in post')
+        # Get and prepare the form object
+        pk = self.kwargs['pk']
+        self.object = self.model.objects.get(id=pk)
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        form.instance = self.object
+
+        # Vraag tekst ophalen
+        form_data = request.POST.dict()
+        vraagtekst = form_data.get('vraagtekst', None)
+
+        vraag_formset = VraagInlineFormset(self.request.POST, instance=self.object)
+        woninggeg_formset = WoninggegevensInlineFormset(self.request.POST, instance=self.object)
+        nummer_formset = NummerInlineFormset(self.request.POST, instance=self.object)
+        adres_formset = AdresInlineFormset(self.request.POST, instance=self.object)
+
+
+
+
+        if vraag_formset.is_valid():
+            print('vraag formset is valid')
+        else:
+            print('vraag formset is invalid')
+
+        if form.is_valid():
+            VraagTekst = form.cleaned_data['cnt_VraagTekst']
+            print(VraagTekst)
+
+
+        #args = (vraag_formset, woninggeg_formset)
+        #if form.is_valid() and vraag_formset.is_valid() and woninggeg_formset.is_valid():
+        #if form.is_valid() and vraag_formset.is_valid():
+        if form.is_valid() and woninggeg_formset.is_valid() and \
+                vraag_formset.is_valid() and nummer_formset.is_valid() and adres_formset.is_valid():
+            print('Form is valid')
+            return self.form_valid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset, VraagTekst)
+            #return self.form_valid(form)
+        else:
+            return self.form_invalid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
+
+    def form_valid(self, form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset, VraagTekst):
+    #def form_valid(self, form):
+        self.object = form.save()
+        self.object.save()
+        #form.save_m2m()
+
+        # Vraagrecord ophalen, moet de eerste zijn
+        DeVraag = self.object.vraag_set[0]
+        DeVraag.vrg_Tekst = VraagTekst
+        DeVraag.save()
+
+        vragen = vraag_formset.save()
+        woninggeg = woninggeg_formset.save()
+        nummers = nummer_formset.save()
+        adressen = adres_formset.save()
+
+        print('bericht opgemaakt')
+
+
+
+
+    # for vraag in vragen:
+        #     vraag.adviescontact = self.object
+        #     self.object.vraag_set.add(vraag, bulk=False)
+        #
+        # for wgeg in woninggeg:
+        #     wgeg.adviescontact = self.object
+        #     self.object.woninggegevens_set.add(wgeg, bulk=False)
+
+        # dikt = {'vraag_formset': vragen, 'woninggeg_formset': woninggeg}
+        # self.get_context_data(dikt)
+
+                # Go back to page
+
+        return redirect(reverse("drzData:upd_klantselfserv", kwargs={'pk': self.object.id}))
+
+    def form_invalid(self, form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset):
+        # context = self.get_context_data()
+        # vraag_formset = context['vraag_formset']
+        # woninggeg_formset = context['woninggeg_formset']
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                    vraag_formset=vraag_formset,
+                                    woninggeg_formset=woninggeg_formset,
+                                  ))
+
+

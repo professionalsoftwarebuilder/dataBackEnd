@@ -4,6 +4,7 @@ from django.conf import settings
 from django_countries.fields import CountryField
 from django.urls import reverse
 from multiselectfield import MultiSelectField
+from datetime import datetime
 
 STATUSCOACHGESPR_CHS = (
     ('A', 'Aangemeld'),
@@ -367,7 +368,7 @@ class Contact(models.Model):
 # Heeft ForeignKey in Vraag
 class AdviesContact(Contact):
     cnt_Vastlegger = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_query_name='Genoteerd door', verbose_name='Vastlegger')
-    cnt_DatVastlegging = models.DateTimeField('Tijdstip van notatie', blank=True, null=True)
+    cnt_DatVastlegging = models.DateTimeField('Tijdstip van notatie', blank=True, null=True, default=datetime.now)
     cnt_Activiteit = models.ManyToManyField(Activiteit, blank=True, verbose_name='Activiteiten', help_text='Activiteiten waaraan dit contact deelneemt; ')
     cnt_NieuwsBrief = models.BooleanField('Nieuwbrief', blank=True, null=True, default=False, help_text='Dit aanvinken als het contact de nieuwsbrief wil ontvangen')
 
@@ -428,7 +429,7 @@ class Vraag(models.Model):
     #$# 010 add 3
     vrg_Afhandelaren = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, verbose_name='Afhandelaren', help_text='Medewerkers die vraag behandelen', related_query_name='afhandelaren_related')
     vrg_Exposanten = models.ManyToManyField(Exposant, blank=True, verbose_name='Exposanten', help_text='Aan deze vraag gekoppelde exposanten', related_query_name='exposanten_related')
-    vrg_DatVastlegging = models.DateTimeField('Tijdstip van notatie', blank=True, null=True)
+    vrg_DatVastlegging = models.DateTimeField('Tijdstip van notatie', blank=True, null=True, default=datetime.now)
     vrg_TypeVraag = models.CharField('Type vraag', max_length=1, choices=TYPEVRAAG_CHS, blank=True, null=True)
     vrg_OnderwerpVraag = models.CharField('Onderwerp vraag', max_length=3, choices=ONDERWERPVRAAG_CHS, blank=True, null=True)
     vrg_StatusVraag = models.CharField('Status vraag', max_length=1, choices=STATUSVRAAG_CHS, blank=True, null=True)
@@ -487,7 +488,7 @@ class Bezoekreden(models.Model):
 
 class WinkelBezoek(models.Model):
     AdviesContact = models.ForeignKey(AdviesContact, on_delete=models.CASCADE, blank=True, null=True)
-    wbz_TijdStip = models.DateTimeField('Tijdstip van bezoek', blank=True, null=True)  #, auto_now_add=True
+    wbz_TijdStip = models.DateTimeField('Tijdstip van bezoek', blank=True, null=True,  default=datetime.now)  #, auto_now_add=True
     wbz_Bezoeken = models.ManyToManyField(Bezoekreden, blank=True, verbose_name='Bezoekreden(en)')
     wbz_Notities = models.TextField('Notities', blank=True, null=True)
 
