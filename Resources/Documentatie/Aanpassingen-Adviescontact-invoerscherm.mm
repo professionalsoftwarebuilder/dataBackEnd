@@ -68,13 +68,21 @@
 </stylenode>
 </map_styles>
 </hook>
-<hook NAME="AutomaticEdgeColor" COUNTER="1" RULE="ON_BRANCH_CREATION"/>
+<hook NAME="AutomaticEdgeColor" COUNTER="2" RULE="ON_BRANCH_CREATION"/>
 <node TEXT="Contacten record moet worden aangepast" POSITION="right" ID="ID_92531099" CREATED="1673629961541" MODIFIED="1673629982083">
 <edge COLOR="#ff0000"/>
 <node TEXT="Velden:" ID="ID_1959218020" CREATED="1673630369244" MODIFIED="1673630383921">
 <node TEXT="Adres velden" ID="ID_13141406" CREATED="1673630384468" MODIFIED="1673630419424"/>
 <node TEXT="Contact velden" ID="ID_529166561" CREATED="1673630421100" MODIFIED="1673630428063"/>
 </node>
+</node>
+<node TEXT="Adviescontacten invoerscherm moet worden aangepast" POSITION="left" ID="ID_1278166865" CREATED="1673687831015" MODIFIED="1673687859917">
+<edge COLOR="#0000ff"/>
+<node TEXT="Activiteiten en Acties moet worden verplaatst (voorlopig verstoppen)" ID="ID_1447584027" CREATED="1673687864086" MODIFIED="1673687901923"/>
+<node TEXT="Nieuwe velden toevoegen" ID="ID_987317960" CREATED="1673687905063" MODIFIED="1673687943778">
+<node TEXT="In Form" ID="ID_907451148" CREATED="1673687946278" MODIFIED="1673687957115"/>
+</node>
+<node TEXT="Vraagen inline verplaatsen naar begintab" ID="ID_323048242" CREATED="1673687962686" MODIFIED="1673687987699"/>
 </node>
 </node>
 </map>

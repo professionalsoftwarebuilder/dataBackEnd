@@ -5,174 +5,195 @@
     {% endblock title %}
 
     {% block content %}
-    `<div class="dw_head">
-        <div class="dw_logo"></div>
-        <div class="dw_title">Duurzaamheidswinkel Dashboard</div>
+    <div class="dw_head">
+        <div class="dw_logo">
+        </div>
+        <div class="dw_title">
+            Duurzaamheidswinkel<br>Dashboard
+        </div>
     </div>
 
     <div class="dw_blocks">
-    <div class="dw_block">
-        <div class="dw_icon"><i class="fa fa-store"></i><i class="fa-solid fa-warehouse"></i>
-        </div>Winkelbezoeken<br><br>
-        <div class="remark">
-            <ul class="opmrk" >
-                <li>
-                    Registratie van anonieme klanten
-                </li>
-                <li>
-                    Door winkelmedewerkers
-                </li>
-                <li>
-                    Op centrale computer
-                </li>
-            </ul>
-        </div>
-        <a href="{% url 'drzData:add_winkelbezoek' %}" >
-        <div class="dw_button">Turfscherm</div>
+        <div class="dw_block">
+            <div class="dw_icon">
+                <i class="fa fa-question-circle"></i>
+            </div>
+            Winkelbezoeken<br><br>
+            <div class="remark">
+                <ul class="opmrk" >
+                    <li>
+                        Registratie van anonieme klanten
+                    </li>
+                    <li>
+                        Door winkelmedewerkers
+                    </li>
+                    <li>
+                        Op centrale computer
+                    </li>
+                </ul>
+            </div>
+            <a href="{% url 'drzData:add_winkelbezoek' %}">
+                <div class="dw_button">
+                    Turfscherm
+                </div>
             </a>
-    </div>
-
-    <div class="dw_block">
-        <div class="dw_icon"><i class="fa fa-house-user"></i></div>Basisregistratie door Bezoeker<br>
-        <div class="remark">
-
-            <ul class="opmrk" >
-                <li>
-                    Gegevensregistratie
-                </li>
-                <li>
-                    Vragen doorgeven
-                </li>
-                <li>
-                    Door winkelbezoekers
-                </li>
-                <li>
-                    Op centrale computer
-                </li>
-            </ul>
         </div>
-        <a href="{% url 'drzData:add_klantselfserv' %}" >
-            <div class="dw_button">
-                Bezoekersscherm
-            </div>
-        </a>
-    </div>
-
-    <div class="dw_block">
-        <div class="dw_icon"><i class="fa fa-house-user"></i></div>Basisregistratie door Medewerker<br>
-        <div class="remark">
-
-            <ul class="opmrk" >
-                <li>
-                    Gegevensregistratie
-                </li>
-                <li>
-                    Vragen doorgeven
-                </li>
-                <li>
-                    Door winkelmedewerkers
-                </li>
-                <li>
-                    Op toegewezen computer
-                </li>
-            </ul>
-        </div>
-        <a href="{% url 'drzData:add_adviescontact' %}" >
-            <div class="dw_button">
-                Medewerkersscherm
-            </div>
-        </a>
-    </div>
-
-    <div class="dw_block">
-        <div class="dw_icon"><i class="fa fa-comment-medical"></i></div>Bezoekers met openstaande vragen<br>
-        <div class="remark">
-            <ul class="opmrk" >
-                <li>
-                    Vragen inzien en erop reageren
-                </li>
-                <li>
-                    Door gemachtigde medewerkers
-                </li>
-                <li>
-                    Op toegewezen computer
-                </li>
-            </ul>
-        </div>
-        <a href="{% url 'drzData:lst_advcont_opnvraag' %}" >
-            <div class="dw_button">
-                Vragen
-            </div>
-        </a>
-    </div>
-
-    <div class="dw_block">
-        <div class="dw_icon"><i class="fa fa-briefcase"></i></div>Energiecoach verslaglegging<br>
-        <div class="remark">
-           <ul class="opmrk" >
-                <li>
-                    Coachingstraject inplannen en registreren
-                </li>
-                <li>
-                    Door energiecoaches en gemachtigden
-                </li>
-                <li>
-                    Openen op toegewezen computer
-                </li>
-            </ul>
-        </div>
-        <a href="{% url 'drzData:add_coachgesprek' %}" >
-            <div class="dw_button">
-                Energiecoach
-            </div>
-        </a>
-    </div>
 
         <div class="dw_block">
-            <div class="dw_icon"><i class="fa fa-file-download"></i></div>Gegevensuitvoer<br><br>
-
-            <div class="remark">
-
-            <ul class="opmrk" >
-                <li>
-                    Bekijk gegevens database
-                </li>
-                <li>
-                    Download gegevens database
-                </li>
-                <li>
-                    Print gegevens database
-                </li>
-            </ul>
+            <div class="dw_icon">
+                <i class="fa fa-question-circle"></i>
             </div>
-
-        <div class="dw_button">Uitvoeren</div>
+            Basisregistratie door Bezoeker<br>
+            <div class="remark">
+                <ul class="opmrk" >
+                    <li>
+                        Gegevensregistratie
+                    </li>
+                    <li>
+                        Vragen doorgeven
+                    </li>
+                    <li>
+                        Door winkelbezoekers
+                    </li>
+                    <li>
+                        Op centrale computer
+                    </li>
+                </ul>
+            </div>
+            <a href="{% url 'drzData:add_adviescontact' %}">
+                <div class="dw_button">
+                    Bezoekersscherm
+                </div>
+            </a>
         </div>
 
+        <div class="dw_block">
+            <div class="dw_icon">
+                <i class="fa fa-question-circle"></i>
+            </div>
+            Basisregistratie door Medewerker<br>
+            <div class="remark">
+                <ul class="opmrk">
+                    <li>
+                        Gegevensregistratie
+                    </li>
+                    <li>
+                        Vragen doorgeven
+                    </li>
+                    <li>
+                        Door winkelmedewerkers
+                    </li>
+                    <li>
+                        Op toegewezen computer
+                    </li>
+                </ul>
+            </div>
+            <a href="{% url 'drzData:add_adviescontact' %}">
+                <div class="dw_button">
+                    Medewerkersscherm
+                </div>
+            </a>
+        </div>
     </div>
 
     <div class="dw_blocks">
+        <div class="dw_block">
+            <div class="dw_icon">
+                <i class="fa fa-question-circle"></i>
+            </div>
+            Bezoekers met openstaande vragen<br>
+            <div class="remark">
+                <ul class="opmrk">
+                    <li>
+                        Vragen inzien en erop reageren
+                    </li>
+                    <li>
+                        Door gemachtigde medewerkers
+                    </li>
+                    <li>
+                        Op toegewezen computer
+                    </li>
+                </ul>
+            </div>
+            <a href="{% url 'drzData:lst_advcont_opnvraag' %}">
+                <div class="dw_button">
+                    Vragen
+                </div>
+            </a>
+        </div>
 
+        <div class="dw_block">
+            <div class="dw_icon">
+                <i class="fa fa-briefcase"></i>
+            </div>
+            Energiecoach verslaglegging<br>
+            <div class="remark">
+               <ul class="opmrk">
+                    <li>
+                        Coachingstraject inplannen en registreren
+                    </li>
+                    <li>
+                        Door energiecoaches en gemachtigden
+                    </li>
+                    <li>
+                        Openen op toegewezen computer
+                    </li>
+                </ul>
+            </div>
+            <a href="{% url 'drzData:add_coachgesprek' %}">
+                <div class="dw_button">
+                    Energiecoach
+                </div>
+            </a>
+        </div>
+
+        <div class="dw_block">
+            <div class="dw_icon">
+                <i class="fa fa-question-circle"></i>
+            </div>
+            Gegevensuitvoer<br><br>
+            <div class="remark">
+                <ul class="opmrk">
+                    <li>
+                        Bekijk gegevens database
+                    </li>
+                    <li>
+                        Download gegevens database
+                    </li>
+                    <li>
+                        Print gegevens database
+                    </li>
+                </ul>
+            </div>
+            <a href="{% url 'drzData:lst_adviescontact' %}">
+                <div class="dw_button">
+                    Uitvoeren
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="dw_blocks">
         <div class="dw_block">
             <div class="dw_icon">
                 <i class="fa fa-key"></i>
             </div>
             {% if not user.is_authenticated %}
-            <div class="remark">
-                Hier kun je inloggen als beheerder in het dashboard
+            <div class="remark" style="margin-bottom:40px; margin-top:40px">
+                Hier kunt u in het dashboard als beheerder inloggen
             </div>
-            <a href="{% url 'admin:index' %}" >
+            <a href="{% url 'admin:index' %}">
                 <div class="dw_button">
                     Inloggen
                 </div>
             </a>
             {% else %}
-            <div class="remark">
+            <div class="remark" style="margin-bottom:40px; margin-top:40px">
                 U bent ingelogd als
-                <b>"{{ user.get_username }}"</b>
-                <p>Hier kunt u uitloggen</p><br/>
+                <b>"{{ user.get_username }}"</b><br>
+                Hier kunt u uitloggen
             </div>
-            <a href="{% url 'admin:logout' %}" >
+            <a href="{% url 'admin:logout' %}">
                 <div class="dw_button">
                     Uitloggen
                 </div>
@@ -181,11 +202,40 @@
         </div>
 
         <div class="dw_block">
-            <div class="dw_icon"><i class="fa fa-question-circle"></i></div>
-            <span style="">Hulp nodig?</span>
-            <div class="remark">Lees dan de helpmodule of stel een vraag</div>
+            <div class="dw_icon">
+                <i class="fa fa-question-circle"></i>
+            </div>
+            <div style="margin-bottom: 12px; font-size: 45px">Hulp nodig?</div>
+            <div class="remark">
+                Lees dan de helpmodule of stel een vraag
+            </div>
             <div class="dw_button">Help</div>
         </div>
 
+        <div class="dw_block">
+            <div class="dw_icon">
+                <i class="fa fa-question-circle"></i>
+            </div>
+            Verbeterpunten APP<br><br>
+            <div class="remark">
+                <ul class="opmrk">
+                    <li>
+                        Gewenste features melden
+                    </li>
+                    <li>
+                        Geconstateerde bugs rapporteren
+                    </li>
+                    <li>
+                        Voortgang ontwikkeling website
+                    </li>
+                </ul>
+            </div>
+            <a href="{% url 'drzData:lst_adviescontact' %}">
+                <div class="dw_button">
+                    Actielijst
+                </div>
+            </a>
+        </div>
     </div>
+    <div style="margin-bottom: 50px"></div>
     {% endblock content %}
