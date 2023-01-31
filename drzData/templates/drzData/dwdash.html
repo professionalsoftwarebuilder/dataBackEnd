@@ -60,7 +60,7 @@
                     </li>
                 </ul>
             </div>
-            <a href="{% url 'drzData:add_adviescontact' %}">
+            <a href="{% url 'drzData:add_klantselfserv' %}">
                 <div class="dw_button">
                     Bezoekersscherm
                 </div>
@@ -115,7 +115,7 @@
                     </li>
                 </ul>
             </div>
-            <a href="{% url 'drzData:lst_advcont_opnvraag' %}">
+            <a href="{% url 'drzData:in_aanbouw' %}">
                 <div class="dw_button">
                     Vragen
                 </div>
@@ -165,7 +165,7 @@
                     </li>
                 </ul>
             </div>
-            <a href="{% url 'drzData:lst_adviescontact' %}">
+            <a href="{% url 'drzData:in_aanbouw' %}">
                 <div class="dw_button">
                     Uitvoeren
                 </div>
@@ -209,7 +209,9 @@
             <div class="remark">
                 Lees dan de helpmodule of stel een vraag
             </div>
-            <div class="dw_button">Help</div>
+            <a href="{% url 'drzData:in_aanbouw' %}">
+                <div class="dw_button">Help</div>
+            </a>
         </div>
 
         <div class="dw_block">
@@ -230,7 +232,7 @@
                     </li>
                 </ul>
             </div>
-            <a href="{% url 'drzData:lst_adviescontact' %}">
+            <a href="{% url 'drzData:in_aanbouw' %}">
                 <div class="dw_button">
                     Actielijst
                 </div>

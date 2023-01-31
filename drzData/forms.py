@@ -84,8 +84,8 @@ class AdviesContactFrontForm(forms.ModelForm):
                   # 'cnt_TussenVgsl',
                   'cnt_AchterNm',
 
-                  'cnt_Telefoon',
                   'cnt_EMail',
+                  'cnt_Telefoon',
 
                   'cnt_Straat',
                   'cnt_HuisNr',
@@ -351,7 +351,7 @@ class KlantSelfServFrontForm(forms.ModelForm):
     cnt_Notities = forms.CharField(widget=wdgTextA, label='Notities', required=False)
     #cnt_DatVastlegging = forms.SplitDateTimeField(widget=AdminSplitDateTime, initial=datetime.today(), label='Tijdstip vastgelegd')
     # Extra veld die niet in model zit (experiment)
-    cnt_VraagTekst = forms.CharField(widget=wdgTextB, label='Vraagtekst', required=False)
+    cnt_VraagTekst = forms.CharField(widget=wdgTextB, label='Vraagtekst', required=True)
 
     class Meta:
         model = AdviesContact
@@ -366,8 +366,8 @@ class KlantSelfServFrontForm(forms.ModelForm):
                   # 'cnt_TussenVgsl',
                   'cnt_AchterNm',
 
-                  'cnt_Telefoon',
                   'cnt_EMail',
+                  'cnt_Telefoon',
 
                   'cnt_Straat',
                   'cnt_HuisNr',

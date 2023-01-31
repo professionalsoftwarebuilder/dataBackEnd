@@ -352,7 +352,7 @@ class Contact(models.Model):
     cnt_PostCd = models.CharField('Postcode', max_length=15, blank=True, null=True)
     cnt_Plaats = models.CharField('Plaats', max_length=85, blank=True, null=True)
     cnt_Telefoon = models.CharField('Telefoon', max_length=85, blank=True, null=True)
-    cnt_EMail = models.CharField('E-mail', max_length=85, blank=True, null=True)
+    cnt_EMail = models.CharField('E-mail', max_length=85, blank=False, null=True)
     cnt_type = models.CharField('Type adres', max_length=1, choices=ADDRESS_CHOICES, blank=True, null=True, default='W')
 
     def __str__(self):

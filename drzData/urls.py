@@ -24,6 +24,8 @@ urlpatterns = [
     path('prnt_lst_advcont/<str:tag>', views.prnt_lst_advcont, name='prnt_lst_advcont'),
     path('snd_bevestcoachgespr/<int:pk>', views.snd_bevestcoachgespr, name='snd_bevestcoachgespr'),
     path('mail_vraag/<int:vrg_id>/<int:cnt_id>', views.mail_vraag, name='mail_vraag'),
+
+    path('in_aanbouw', views.in_aanbouw, name='in_aanbouw'),
 ]
 
 admin.site.site_header = 'Duurzaam Woerden Gegevensbeheer'                    # default: "Django Administration"

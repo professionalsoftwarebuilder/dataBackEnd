@@ -12,6 +12,7 @@
   background-color: #f1f1f1;
   height: 30px;
   margin-top: 6px;
+  //margin-bottom: 12px;
 }
 
 
@@ -70,6 +71,12 @@
     //font-size:25px;
     font-weight:bold;
     //font-color:blue important!;
+    content: ' *';
+}
+
+label.required::after {
+    content: ' *';
+    color: red;
 }
 
 .showinline {
@@ -77,3 +84,45 @@
 }
 
 //th.required:after { content: '*' }
+
+//-------Collapsible------
+
+.collapsiblex {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+/*
+.active, .collapsiblex:hover {
+  background-color: #555;
+}
+*/
+
+.collapsiblex:after {
+  //content: '\002B';
+  color: white;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+
+/*
+.active:after {
+  content: "\2212";
+}
+*/
+
+.content {
+  padding: 0 18px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: #f1f1f1;
+}

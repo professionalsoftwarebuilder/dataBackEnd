@@ -907,3 +907,6 @@ class upd_klantselfserv(UpdateView):
                                   ))
 
 
+def in_aanbouw(request):
+    context = {}
+    return render(request, 'drzData/in_aanbouw.html', context)
