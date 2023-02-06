@@ -846,4 +846,12 @@ document.getElementById("defaultOpen").click();
 {% endif %}
 </script>
 
+{% block js_page %}
+
+<!------js specific for page------>
+
+    <script type="text/javascript" src="{% static 'js/tabbedpages.js' %}"></script>
+
+{% endblock js_page %}
+
 {% endblock %}
