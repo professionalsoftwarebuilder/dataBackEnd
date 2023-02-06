@@ -654,72 +654,25 @@ class add_klantselfserv(CreateView):
     template_name = 'drzData/add_klantselfserv.html'
     #success_url = reverse_lazy('drzData:add_adviescontact')
 
-    # def get_object(self, queryset=None):
-    #     if 'pk' in self.kwargs:
-    #         pk = self.kwargs['pk']
-    #         obj = self.model.objects.get(id=pk)
-    #     else:
-    #         obj = None
-    #
-    #     return obj
-
-    def get_context_data(self, **kwargs):
-        context = super(add_klantselfserv, self).get_context_data(**kwargs)
-        extraContext = {'vraag_formset': VraagInlineFormset(),
-                        'woninggeg_formset': WoninggegevensInlineFormset(),
-                        'nummer_formset': NummerInlineFormset(),
-                        'adres_formset': AdresInlineFormset(),
-                        }
-        context.update(extraContext)
-        return context
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     extraContext = {'score': bezoeken.count(), 'redenen': deLijst}
-    #     context.update(extraContext)
-    #     return context
-
     def post(self, request, *args, **kwargs):
         self.object = None
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-
-        vraag_formset = VraagInlineFormset(self.request.POST)
-        woninggeg_formset = WoninggegevensInlineFormset(self.request.POST)
-        nummer_formset = NummerInlineFormset(self.request.POST)
-        adres_formset = AdresInlineFormset(self.request.POST)
-
-        if vraag_formset.is_valid():
-            print('vraag formset is valid')
-        else:
-            print('vraag formset is invalid')
-
-        if adres_formset.is_valid():
-            print('adres formset is valid')
-        else:
-            print('adres formset is invalid')
-
-        #args = (vraag_formset, woninggeg_formset)
-        #if form.is_valid() and vraag_formset.is_valid() and woninggeg_formset.is_valid():
-        #if form.is_valid() and vraag_formset.is_valid():
-        #if form.is_valid() and woninggeg_formset.is_valid():
 
         if form.is_valid():
             VraagTekst = form.cleaned_data['cnt_VraagTekst']
             print(VraagTekst)
 
 
-        if form.is_valid() and woninggeg_formset.is_valid() and \
-                    vraag_formset.is_valid() and nummer_formset.is_valid() and adres_formset.is_valid():
-            return self.form_valid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset, VraagTekst)
+        if form.is_valid():
+            return self.form_valid(form, VraagTekst)
             #return self.form_valid(form)
         else:
-            return self.form_invalid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
+            return self.form_invalid(form)
 
-    def form_valid(self, form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset, VraagTekst):
+    def form_valid(self, form, VraagTekst):
     #def form_valid(self, form):
         self.object = form.save(commit=False)
-        #ctx = self.get_context_data()
         # Deze view kan ook vanuit winkelbezoek zijn aangeroepen!!!
         # In dat geval wordt hier de winkelbezoek gekoppeld
         if 'wnkbz' in self.kwargs:
@@ -747,48 +700,15 @@ class add_klantselfserv(CreateView):
 
         form.save_m2m()
 
-        # context = self.get_context_data()
-        # vraag_formset = context['vraag_formset']
-        # woninggeg_formset = context['woninggeg_formset']
-        vragen = vraag_formset.save(commit=False)
-        woninggeg = woninggeg_formset.save(commit=False)
-        nummers = nummer_formset.save(commit=False)
-        adressen = adres_formset.save(commit=False)
-
-        for vraag in vragen:
-            vraag.adviescontact = self.object
-            self.object.vraag_set.add(vraag, bulk=False)
-
-        for wgeg in woninggeg:
-            wgeg.adviescontact = self.object
-            self.object.woninggegevens_set.add(wgeg, bulk=False)
-
-        for nummer in nummers:
-            nummer.adviescontact = self.object
-            self.object.nummer_set.add(nummer, bulk=False)
-
-        for adres in adressen:
-            adres.adviescontact = self.object
-            self.object.adres_set.add(adres, bulk=False)
-
-        #return redirect(reverse("drzData:upd_klantselfserv", kwargs={'pk': self.object.id}))
-
         return redirect(reverse("drzData:add_klantselfserv"))
 
 
-    def form_invalid(self, form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset):
-        # context = self.get_context_data()
-        # vraag_formset = context['vraag_formset']
-        # woninggeg_formset = context['woninggeg_formset']
+    def form_invalid(self, form):
         return self.render_to_response(
-            self.get_context_data(form=form,
-                                  woninggeg_formset=woninggeg_formset,
-                                  vraag_formset=vraag_formset))
+            self.get_context_data(form=form))
 
 
-
-
-
+# Let op: class hieronder wordt niet gebruikt
 class upd_klantselfserv(UpdateView):
     model = AdviesContact
     form_class = KlantSelfServFrontForm

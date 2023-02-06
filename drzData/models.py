@@ -627,3 +627,6 @@ class FollowUp(models.Model):
     Fup_WelkeMaatrGenomen = models.TextField('Welke maatregelen zijn er genomen?', blank=True, null=True)
     Fup_WelkGedragVeranderd = models.TextField('Welke gedrag is er veranderd?', blank=True, null=True)
     Fup_WelkeVerderStappen = models.TextField('Welke verdere stappen kunnen er genomen worden?', blank=True, null=True)
+
+
+#class Vraag

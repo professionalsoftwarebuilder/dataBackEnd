@@ -4,56 +4,61 @@
 //  dat wanneer de gebruiker op een tab is en de pagina wil niet submitten vanwege velden op een
 //  ander tab, dat de gebruiker niet weet wat er aan de hand is
 
-    //alert('010');
-    var createAllErrors = function() {
-        //alert('createAllErrors');
-        var form = $( this ),
-            errorList = $( "ul.errorMessages", form );
+alert('010');
 
-        var showAllErrorMessages = function() {
-            errorList.empty();
-            //alert('showAllErrorMessages');
+var createAllErrors = function() {
+    alert('createAllErrors');
+    var form = $( this ),
+        errorList = $( "ul.errorMessages", form );
 
-            // Find all invalid fields within the form.
-            var invalidFields = form.find( ":invalid" ).each( function( index, node ) {
+    var showAllErrorMessages = function() {
+        errorList.empty();
+        //alert('showAllErrorMessages');
 
-                // Find the field's corresponding label
-                var label = $( "label[for=" + node.id + "] "),
-                    // Opera incorrectly does not fill the validationMessage property.
-                    message = node.validationMessage || 'Invalid value.';
+        // Find all invalid fields within the form.
+        var invalidFields = form.find( ":invalid" ).each( function( index, node ) {
 
-                errorList
-                    .show()
-                    .append( "<li class='showinline ml-2' ><span><b>" + label.html() + "</b></span> " + message + "</li>" );
-                    //alert('appended');
-            });
-            //alert('showAllErrorMessages');
+            // Find the field's corresponding label
+            var label = $( "label[for=" + node.id + "] "),
+                // Opera incorrectly does not fill the validationMessage property.
+                message = node.validationMessage || 'Invalid value.';
 
-        };
-
-        $( "input[type=submit], button:not([type=button])", form )
-            .on( "click", showAllErrorMessages);
-
-        $( "input", form ).on( "keypress", function( event ) {
-            //alert('Keypress');
-            var type = $( this ).attr( "type" );
-            if ( /date|email|month|number|search|tel|text|time|url|week/.test ( type )
-              && event.keyCode == 13 ) {
-                showAllErrorMessages();
-            }
-            //alert('Keypress');
+            errorList
+                .show()
+                .append( "<li class='showinline ml-2' ><span><b>" + label.html() + "</b></span> " + message + "</li>" );
+                //alert('appended');
         });
+        alert('showAllErrorMessages');
+
     };
 
+    $( "input[type=submit], button:not([type=button])", form )
+        .on( "click", showAllErrorMessages);
+
+    $( "input", form ).on( "keypress", function( event ) {
+        alert('Keypress');
+        var type = $( this ).attr( "type" );
+        if ( /date|email|month|number|search|tel|text|time|url|week/.test ( type )
+          && event.keyCode == 13 ) {
+            showAllErrorMessages();
+        }
+        //alert('Keypress');
+    });
+};
+
+    //alert('020');
     $( "form" ).each( createAllErrors );
 
 //------Collapsible------
+
+alert('debug 01');
 
 var coll = document.getElementsByClassName("collapsiblex");
 var i;
 
 for (i = 0; i < coll.length; i++) {
   coll[i].addEventListener("click", function() {
+    //alert('in collapseble function');
     this.classList.toggle("active");
     var content = this.nextElementSibling;
     if (content.style.maxHeight){
@@ -63,3 +68,5 @@ for (i = 0; i < coll.length; i++) {
     }
   });
 }
+
+
