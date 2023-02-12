@@ -7,7 +7,7 @@ from django.utils.html import format_html
 from .forms import ContactForm, AdresForm, NummerForm, ExposantForm, AdviesContactForm, VraagForm, CoachgesprekForm
 from .models import Groep, Contact, Adres, Nummer, Woninggegevens, Vraag, \
     Activiteit, Actie, WinkelBezoek, Bezoekreden, Exposant, \
-    AdviesContact, CoachGesprek
+    AdviesContact, CoachGesprek, VraagReden
 
 
 class NummerCntInline(admin.StackedInline):
@@ -131,3 +131,4 @@ admin.site.register(Bezoekreden)
 admin.site.register(WinkelBezoek)
 admin.site.register(AdviesContact, AdviesContactAdmin)
 admin.site.register(CoachGesprek, CoachgesprekAdmin)
+admin.site.register(VraagReden)

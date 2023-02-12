@@ -4,10 +4,10 @@
 //  dat wanneer de gebruiker op een tab is en de pagina wil niet submitten vanwege velden op een
 //  ander tab, dat de gebruiker niet weet wat er aan de hand is
 
-alert('010');
+//alert('010');
 
 var createAllErrors = function() {
-    alert('createAllErrors');
+    //alert('createAllErrors');
     var form = $( this ),
         errorList = $( "ul.errorMessages", form );
 
@@ -28,7 +28,7 @@ var createAllErrors = function() {
                 .append( "<li class='showinline ml-2' ><span><b>" + label.html() + "</b></span> " + message + "</li>" );
                 //alert('appended');
         });
-        alert('showAllErrorMessages');
+        //alert('showAllErrorMessages');
 
     };
 
@@ -36,7 +36,7 @@ var createAllErrors = function() {
         .on( "click", showAllErrorMessages);
 
     $( "input", form ).on( "keypress", function( event ) {
-        alert('Keypress');
+        //alert('Keypress');
         var type = $( this ).attr( "type" );
         if ( /date|email|month|number|search|tel|text|time|url|week/.test ( type )
           && event.keyCode == 13 ) {
@@ -51,7 +51,7 @@ var createAllErrors = function() {
 
 //------Collapsible------
 
-alert('debug 01');
+//alert('debug 01');
 
 var coll = document.getElementsByClassName("collapsiblex");
 var i;

@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.admin.widgets import AdminSplitDateTime
 from django.forms import widgets
 from .models import Bezoekreden, WinkelBezoek, Exposant, \
-    AdviesContact, Vraag, Contact, Woninggegevens, CoachGesprek, Nummer, Adres
+    AdviesContact, Vraag, Contact, Woninggegevens, CoachGesprek, Nummer, Adres, VraagReden
 from django.forms import inlineformset_factory
 from .widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
 from django.conf import settings
@@ -163,6 +163,7 @@ class WinkelBezoekForm(forms.ModelForm):
 
 
 class VraagForm(forms.ModelForm):
+    required_css_class = 'required'
     #vrg_Tekst = forms.CharField(widget=wdgTextA, label='Vraag tekst', required=False)
     # vrg_TypeVraag = forms.CharField(label='Type vraag', max_length=1, choices=TYPEVRAAG_CHS, blank=True, null=True)
     # vrg_OnderwerpVraag = forms.CharField(label='Onderwerp vraag', max_length=3, choices=ONDERWERPVRAAG_CHS, blank=True, null=True)
@@ -188,11 +189,26 @@ class VraagForm(forms.ModelForm):
         required=False
     )
 
+    vrg_Reden = forms.ModelMultipleChoiceField(
+        queryset=VraagReden.objects.all(),
+        widget=forms.CheckboxSelectMultiple(attrs={'style': 'list-style-type:none;'}),
+        # empty_label='Geen bezoekredenen in systeem aanwezig',
+        label='Vraagreden(en)',
+        required=False,
+        #help_text='Voor opslaan een of meerdere bezoekredenen kiezen, anders krijgt u een foutmelding',
+    )
+
     class Meta:
         model = Vraag
-        #$# 010 chn 1
-        fields = ('vrg_DatVastlegging', 'vrg_Tekst', 'vrg_Afhandelaren', 'vrg_Exposanten', 'vrg_OnderwerpVraag', 'vrg_StatusVraag', 'vrg_TypeVraag')
-
+        # $# 010 chn 1
+        fields = ('vrg_DatVastlegging',
+                  'vrg_Tekst',
+                  'vrg_StatusVraag',
+                  'vrg_Afhandelaren',
+                  'vrg_Exposanten',
+                  # 'vrg_OnderwerpVraag',
+                  'vrg_Reden',
+                  'vrg_TypeVraag')
 
 class WoninggegevensForm(forms.ModelForm):
 
