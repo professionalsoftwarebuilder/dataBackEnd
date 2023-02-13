@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.admin.widgets import AdminSplitDateTime
 from django.forms import widgets
 from .models import Bezoekreden, WinkelBezoek, Exposant, \
-    AdviesContact, Vraag, Contact, Woninggegevens, CoachGesprek, Nummer, Adres, VraagReden
+    AdviesContact, Vraag, Contact, Woninggegevens, CoachGesprek, Nummer, Adres, VraagReden, Activiteit, Actie
 from django.forms import inlineformset_factory
 from .widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
 from django.conf import settings
@@ -69,6 +69,16 @@ class AdviesContactFrontForm(forms.ModelForm):
     # Extra veld die niet in model zit (experiment)
     #cnt_VraagTekst = forms.CharField(widget=wdgTextB, label='Vraagtekst', required=False)
 
+    cnt_Acties = forms.ModelMultipleChoiceField(
+        queryset=Actie.objects.all().order_by('aci_Naam'),
+        widget=forms.CheckboxSelectMultiple(attrs={'style': 'list-style-type:none;'}),
+        # empty_label='Geen bezoekredenen in systeem aanwezig',
+        label='Vervolgactie(s)',
+        required=True,
+        #help_text='Voor opslaan een of meerdere bezoekredenen kiezen, anders krijgt u een foutmelding',
+    )
+
+
     class Meta:
         model = AdviesContact
         # Fieldsets schijnt er niet te zijn in django native
@@ -94,6 +104,7 @@ class AdviesContactFrontForm(forms.ModelForm):
                   'cnt_Plaats',
                   'cnt_type',                   # 13
 
+                  'cnt_Acties',
                   'cnt_Notities',
                   #'cnt_VraagTekst',
                   )
@@ -125,8 +136,8 @@ class AdresForm(forms.ModelForm):
 
 
 class NummerForm(forms.ModelForm):
-    nmb_Notities = forms.CharField(widget=wdgTextA, label='Notities', required=False,
-                                   help_text='Kanttekening bij dit nummer (bijv: meest recent)')
+    nmb_Notities = forms.CharField(widget=wdgTextA, label='', required=False,
+                                   help_text='Notities (bijvoorbeeld: meest recent)')
 
     class Meta:
         exclude = ('Groep',)

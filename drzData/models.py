@@ -477,8 +477,8 @@ class Adres(models.Model):
 class Nummer(models.Model):
     Contact = models.ForeignKey(Contact, on_delete=models.CASCADE, blank=True, null=True)
     Groep = models.ForeignKey(Groep, on_delete=models.CASCADE, blank=True, null=True)
-    nmb_Number = models.CharField('Nummer', max_length=85, help_text='Mobiel, Telefoon, E-mail, Facebook, enz.')
-    nmb_Medium = models.CharField('Medium', max_length=1, choices=MEDIUM_CHS, blank=True, null=True)
+    nmb_Number = models.CharField('', max_length=85, help_text='Mobiel nummer, Huistelefoon, E-mail, Facebook, enz.')
+    nmb_Medium = models.CharField('', max_length=1, help_text='Communicatiemethode', choices=MEDIUM_CHS, blank=True, null=True)
     nmb_Notities = models.CharField('Notitie', max_length=120, blank=True, null=True)
 
     def __str__(self):

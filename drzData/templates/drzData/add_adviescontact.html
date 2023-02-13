@@ -14,10 +14,16 @@
 
 <!------Tab links------>
 
-    <div class="tab">
+    <div class="cktab">
+        <span style="padding: 4px 16px; font-weight: bold; font-size: 20px">
+            {% if object %}Wijzig{% else %}Nieuw{% endif %} Adviescontact
+        </span>
+    </div>
+
+    <div class="tab" style="margin-top: 6px">
           <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'London')">Adviescontact</button>
           <button class="tablinks" onclick="openCity(event, 'Tokyo')">Vragen</button>
-          <button class="tablinks" onclick="openCity(event, 'Oss')">Extra Nummers en Adressen</button>
+          <button class="tablinks" onclick="openCity(event, 'Oss')">Extra Contactgegevens</button>
    <!--     <button class="tablinks" onclick="openCity(event, 'Berghem')">Adressen</button>-->
           <button class="tablinks" onclick="openCity(event, 'Paris')">Woninggegevens</button>
     </div>
@@ -50,11 +56,85 @@
 <!------Tab content Adviescontact------>
 
         <div id="London" class="tabcontent">
-            <h2>{% if object %}Wijzig{% else %}Nieuwe{% endif %} Adviescontact</h2>
-            <table>
-            {{ form.as_table }}
+
+<!--            <table>-->
+<!--            {{ form.as_table }}-->
+<!--            </table>-->
+
+
+            <table class="mt-8">
+                {% for field in form.visible_fields|slice:":6" %}
+                    <tr>
+                        <th>{{ field.label_tag }}</th>
+                        <td>
+                            {% if field.errors %}
+                                <ul>
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            {{ field }}
+                            {% if field.help_text %}
+                                <br/>{{ field.help_text }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
             </table>
+
+
+            <button class="collapsiblex" style="margin-top:12px;" type="button">Adresgegevens</button>
+
+            <div class="content">
+                <table>
+                    {% for field in form.visible_fields|slice:"6:12" %}
+                        <tr>
+                            <th>{{ field.label_tag }}</th>
+                            <td>
+                                {% if field.errors %}
+                                    <ul>
+                                        {% for error in field.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <br/>{{ field.help_text }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <table style="margin-top:12px; margin-bottom:50px;">
+                {% for field in form.visible_fields|slice:"12:14" %}
+                    <tr>
+                        <th>{{ field.label_tag }}</th>
+                        <td>
+                            {% if field.errors %}
+                                <ul>
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            {{ field }}
+                            {% if field.help_text %}
+                                <br/>{{ field.help_text }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+
         </div>
+
+
+
+
 
         <div id="Paris" class="tabcontent">
             <h2>Woninggegevens bij dit Adviescontact</h2>
@@ -112,9 +192,10 @@
         </div>
 
         <div id="Oss" class="tabcontent">
-              <h2>Nummer(s) / e-mail enz.</h2>
+              <h2>Telefoon, e-mail, enz.</h2>
                     {{ nummer_formset|crispy }}
-              <h2>Adressen (woon adres, post adres, verblijf adres, enz)</h2>
+              <hr>
+              <h2 style="margin-top: 20px;">Adressen (woonadres, postadres, verblijfadres, enz.)</h2>
                     {{ adres_formset|crispy }}
         </div>
 
