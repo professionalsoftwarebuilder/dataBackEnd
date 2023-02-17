@@ -45,12 +45,20 @@
                 {% if field.errors %}
                     <ul>
                         {% for error in field.errors %}
-                            <li>{{ error }} 123</li>
+                            <li>{{ error }}</li>
                         {% endfor %}
                     </ul>
                 {% endif %}
             {% endfor %}
             {{ form.errors }}
+
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+           {% endif %}
         </div>
 
 <!------Tab content Adviescontact------>

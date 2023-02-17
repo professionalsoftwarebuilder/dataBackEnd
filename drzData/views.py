@@ -26,6 +26,8 @@ from datetime import datetime
 
 from django.contrib.auth import get_user_model
 
+from logging import CRITICAL
+
 User = get_user_model()
 
 def index(request):
@@ -206,22 +208,43 @@ class add_adviescontact(CreateView):
         nummer_formset = NummerInlineFormset(self.request.POST)
         adres_formset = AdresInlineFormset(self.request.POST)
 
-        if vraag_formset.is_valid():
-            print('vraag formset is valid')
-        else:
-            print('vraag formset is invalid')
-
-        if adres_formset.is_valid():
-            print('adres formset is valid')
-        else:
-            print('adres formset is invalid')
+        # For debugging purposes
+        # print('In add classview van adviescontact')
+        # if vraag_formset.is_valid():
+        #     print('vraag formset is valid')
+        # else:
+        #     print('vraag formset is invalid')
+        #
+        # if adres_formset.is_valid():
+        #     print('adres formset is valid')
+        # else:
+        #     print('adres formset is invalid')
+        #
+        # if woninggeg_formset.is_valid():
+        #     print('woninggeg_formset is valid')
+        # else:
+        #     print('woninggeg_formset is invalid')
+        #
+        # if nummer_formset.is_valid():
+        #     print('nummer_formset is valid')
+        # else:
+        #     print('nummer_formset is invalid')
 
         #args = (vraag_formset, woninggeg_formset)
         #if form.is_valid() and vraag_formset.is_valid() and woninggeg_formset.is_valid():
         #if form.is_valid() and vraag_formset.is_valid():
         #if form.is_valid() and woninggeg_formset.is_valid():
+
+        messages.add_message(request, CRITICAL, 'A serious error occurred.')
+        messages.add_message(
+            request, messages.SUCCESS, 'Profile details updated.',
+            fail_silently=True,
+        )
+        messages.info(request, 'Hello world.', fail_silently=True)
+
         if form.is_valid() and woninggeg_formset.is_valid() and \
                     vraag_formset.is_valid() and nummer_formset.is_valid() and adres_formset.is_valid():
+            print('add alles valid')
             return self.form_valid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
             #return self.form_valid(form)
         else:
@@ -269,6 +292,7 @@ class add_adviescontact(CreateView):
         for adres in adressen:
             adres.adviescontact = self.object
             self.object.adres_set.add(adres, bulk=False)
+
 
         return redirect(reverse("drzData:upd_adviescontact", kwargs={'pk': self.object.id}))
 
@@ -331,22 +355,46 @@ class upd_adviescontact(UpdateView):
         adres_formset = AdresInlineFormset(self.request.POST, instance=self.object)
 
 
+        messages.add_message(request, CRITICAL, 'A serious error occurred.')
+        messages.add_message(
+            request, messages.SUCCESS, 'Profile details updated.',
+            fail_silently=True,
+        )
+        messages.info(request, 'Hello world.', fail_silently=True)
 
+        # For debugging purposes
+        # print('In update classview van adviescontact')
+        # if vraag_formset.is_valid():
+        #     print('updvraag formset is valid')
+        # else:
+        #     print('vraag formset is invalid')
+        #
+        # if woninggeg_formset.is_valid():
+        #     print('woninggeg_formset is valid')
+        # else:
+        #     print('woninggeg_formset is invalid')
+        #
+        # if nummer_formset.is_valid():
+        #     print('nummer_formset is valid')
+        # else:
+        #     print('nummer_formset is invalid')
+        #
+        # if adres_formset.is_valid():
+        #     print('adres_formset is valid')
+        # else:
+        #     print('adres_formset is invalid')
 
-        if vraag_formset.is_valid():
-            print('vraag formset is valid')
-        else:
-            print('vraag formset is invalid')
         #args = (vraag_formset, woninggeg_formset)
         #if form.is_valid() and vraag_formset.is_valid() and woninggeg_formset.is_valid():
         #if form.is_valid() and vraag_formset.is_valid():
         if form.is_valid() and woninggeg_formset.is_valid() and \
                 vraag_formset.is_valid() and nummer_formset.is_valid() and adres_formset.is_valid():
-            print('Form is valid')
+            print('upd all Form is valid')
             return self.form_valid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
-            #return self.form_valid(form)
         else:
+            print('upd a Form is INVALID')
             return self.form_invalid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
+
 
     def form_valid(self, form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset):
     #def form_valid(self, form):
@@ -755,9 +803,6 @@ class upd_klantselfserv(UpdateView):
         woninggeg_formset = WoninggegevensInlineFormset(self.request.POST, instance=self.object)
         nummer_formset = NummerInlineFormset(self.request.POST, instance=self.object)
         adres_formset = AdresInlineFormset(self.request.POST, instance=self.object)
-
-
-
 
         if vraag_formset.is_valid():
             print('vraag formset is valid')

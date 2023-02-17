@@ -74,10 +74,9 @@ class AdviesContactFrontForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple(attrs={'style': 'list-style-type:none;'}),
         # empty_label='Geen bezoekredenen in systeem aanwezig',
         label='Vervolgactie(s)',
-        required=True,
+        required=False,
         #help_text='Voor opslaan een of meerdere bezoekredenen kiezen, anders krijgt u een foutmelding',
     )
-
 
     class Meta:
         model = AdviesContact
