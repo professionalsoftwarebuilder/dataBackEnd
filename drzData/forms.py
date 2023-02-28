@@ -31,6 +31,7 @@ class ContactForm(forms.ModelForm):
     cnt_Notities = forms.CharField(widget=wdgTextA, label='Notities', required=False)
 
 
+# Let op: Deze wordt (alleen) gebruikt in de admin
 class AdviesContactForm(forms.ModelForm):
     #required_css_class = 'required'
 
@@ -40,8 +41,6 @@ class AdviesContactForm(forms.ModelForm):
     cnt_Notities = forms.CharField(widget=wdgTextA, label='Notities', required=False)
     cnt_DatVastlegging = forms.SplitDateTimeField(widget=AdminSplitDateTime, required=False, initial=datetime.today(), label='Tijdstip van notatie')
 
-
-
     class Meta:
         model = AdviesContact
         fields = ('cnt_Vastlegger',
@@ -50,6 +49,13 @@ class AdviesContactForm(forms.ModelForm):
                   'cnt_AchterNm',
                   'cnt_TussenVgsl',
                   'cnt_VoorLtrs',
+                  'cnt_Telefoon',
+                  'cnt_EMail',
+                  'cnt_Straat',
+                  'cnt_HuisNr',
+                  'cnt_HuisNrToev',
+                  'cnt_PostCd',
+                  'cnt_Plaats',
                   'cnt_Notities',
                   'cnt_Type',
                   'cnt_NieuwsBrief',
