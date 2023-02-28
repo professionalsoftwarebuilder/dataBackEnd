@@ -1,9 +1,0 @@
-env
-scrpt-rsync-backup.txt
-README.md
-LICENSE
-error.log
-*.kdev4
-access.log
-static_root
-media_root

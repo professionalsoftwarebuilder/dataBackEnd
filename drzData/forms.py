@@ -241,6 +241,8 @@ class CoachgesprekForm(forms.ModelForm):
     # cgs_AanmeldingZelf = models.CharField('Zelf aangemenld', max_length=2, choices=AANMELDZELF_CHS, blank=True, null=True)
     # cgs_AanmeldAnders = models.TextField('Anders', blank=True, null=True, help_text='Andere reden voor aanmelding')
 
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(CoachgesprekForm, self).__init__(*args, **kwargs)
         for name, field in self.fields.items():
