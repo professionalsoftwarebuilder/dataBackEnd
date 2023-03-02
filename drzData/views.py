@@ -235,19 +235,16 @@ class add_adviescontact(CreateView):
         #if form.is_valid() and vraag_formset.is_valid():
         #if form.is_valid() and woninggeg_formset.is_valid():
 
-        messages.add_message(request, CRITICAL, 'A serious error occurred.')
-        messages.add_message(
-            request, messages.SUCCESS, 'Profile details updated.',
-            fail_silently=True,
-        )
         messages.info(request, 'Hello world.', fail_silently=True)
 
         if form.is_valid() and woninggeg_formset.is_valid() and \
                     vraag_formset.is_valid() and nummer_formset.is_valid() and adres_formset.is_valid():
+            messages.success(request, 'Gegevens succesvol opgeslagen')
             print('add alles valid')
             return self.form_valid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
             #return self.form_valid(form)
         else:
+            messages.error(request, 'Er ging iets fout; gegevens niet opgeslagen')
             return self.form_invalid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
 
     def form_valid(self, form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset):
@@ -354,14 +351,6 @@ class upd_adviescontact(UpdateView):
         nummer_formset = NummerInlineFormset(self.request.POST, instance=self.object)
         adres_formset = AdresInlineFormset(self.request.POST, instance=self.object)
 
-
-        messages.add_message(request, CRITICAL, 'A serious error occurred.')
-        messages.add_message(
-            request, messages.SUCCESS, 'Profile details updated.',
-            fail_silently=True,
-        )
-        messages.info(request, 'Hello world.', fail_silently=True)
-
         # For debugging purposes
         # print('In update classview van adviescontact')
         # if vraag_formset.is_valid():
@@ -389,9 +378,11 @@ class upd_adviescontact(UpdateView):
         #if form.is_valid() and vraag_formset.is_valid():
         if form.is_valid() and woninggeg_formset.is_valid() and \
                 vraag_formset.is_valid() and nummer_formset.is_valid() and adres_formset.is_valid():
+            messages.success(request, 'Gegevens succesvol opgeslagen')
             print('upd all Form is valid')
             return self.form_valid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
         else:
+            messages.error(request, 'Er ging iets fout; gegevens niet opgeslagen')
             print('upd a Form is INVALID')
             return self.form_invalid(form, vraag_formset, woninggeg_formset, nummer_formset, adres_formset)
 
@@ -562,6 +553,8 @@ class upd_coachgesprek(UpdateView):
         self.object = form.save()
         self.object.save()
 
+        messages.success(self.request, 'Gegevens succesvol opgeslagen')
+
         # Als sendbevestigingsmail geklikt was
         if 'sendmail' in self.request.POST:
             print('mail verzenden')
@@ -629,6 +622,7 @@ class upd_coachgesprek(UpdateView):
         return redirect(reverse("drzData:upd_coachgesprek", kwargs={'pk': self.object.id}))
 
     def form_invalid(self, form):
+        messages.error(self.request, 'Er ging iets fout; gegevens niet opgeslagen')
         return self.render_to_response(self.get_context_data(form=form))
 
 

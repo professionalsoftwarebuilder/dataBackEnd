@@ -50,15 +50,17 @@
                     </ul>
                 {% endif %}
             {% endfor %}
-            {{ form.errors }}
 
             {% if messages %}
-                <ul class="messages">
+                <ul class="errorMessages showinline">
                     {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        <li  style="padding: 4px 16px">{{ message }}</li>
                     {% endfor %}
                 </ul>
            {% endif %}
+
+           {{ form.errors }}
+
         </div>
 
 <!------Tab content Adviescontact------>
