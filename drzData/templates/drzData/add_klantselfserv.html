@@ -34,17 +34,26 @@
 
         <div class="cktab" style="margin-bottom: 20px; height: 55px;">
             <span style="padding: 4px 16px">Meldingen:&nbsp;</span>
-            <ul class="errorMessages showinline"></ul>
             {% for field in form.visible_fields %}
                 {% if field.errors %}
-                    <ul>
+                    <ul class="errorMessages showinline" >
                         {% for error in field.errors %}
                             <li>{{ error }}</li>
                         {% endfor %}
                     </ul>
                 {% endif %}
             {% endfor %}
-            {{ form.errors }}
+
+            {% if messages %}
+                <ul class="errorMessages showinline">
+                    {% for message in messages %}
+                        <li  style="padding: 4px 16px">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+           {% endif %}
+
+           {{ form.errors }}
+
         </div>
 
 <!------Tab content Adviescontact------>

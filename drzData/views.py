@@ -713,9 +713,11 @@ class add_klantselfserv(CreateView):
 
 
         if form.is_valid():
+            messages.success(request, 'Gegevens succesvol opgeslagen')
             return self.form_valid(form, VraagTekst)
             #return self.form_valid(form)
         else:
+            messages.error(request, 'Er ging iets fout; gegevens niet opgeslagen')
             return self.form_invalid(form)
 
     def form_valid(self, form, VraagTekst):
